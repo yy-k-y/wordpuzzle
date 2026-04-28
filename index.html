@@ -30,7 +30,6 @@
       font-family: 'CookieRun', 'Comic Sans MS', 'Malgun Gothic', sans-serif;
       background: linear-gradient(135deg, var(--bg-top), var(--bg-bottom));
       color: var(--text-dark);
-      /* 창이 너무 작을 때는 전체 스크롤 허용 */
       overflow-y: auto; 
     }
 
@@ -38,15 +37,13 @@
       max-width: 1200px;
       margin: 0 auto;
       padding: 16px;
-      /* 화면에 꽉 차되 내용이 넘치면 늘어남 */
       height: 100vh;
       height: 100dvh;
-      min-height: 750px; 
+      min-height: 700px; 
       display: flex;
       flex-direction: column;
     }
 
-    /* 상단 헤더: flex-shrink: 0으로 찌그러짐 완벽 방지 */
     .top-header { text-align: center; margin-bottom: 16px; flex-shrink: 0; }
     .top-header h1 {
       margin: 0 0 16px;
@@ -87,52 +84,64 @@
       display: flex;
       flex-direction: column;
       overflow: hidden;
+      background: #fff;
     }
 
-    /* 1. 왼쪽 퍼즐판 패널: 대비감 상승을 위해 배경색 추가 */
+    /* 퍼즐판 패널 설정 */
     .board-panel { 
       flex: 1; 
-      padding: 20px;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      /* 은은한 민트색 모눈종이 패턴 배경 */
       background-color: #E6FFFA;
       background-image: linear-gradient(#D1FAE5 1px, transparent 1px), linear-gradient(90deg, #D1FAE5 1px, transparent 1px);
       background-size: 20px 20px;
       border: 4px solid #fff;
+      min-height: 0;
     }
     
     .board-top-note {
-      font-size: 15px; color: var(--text-dark); margin-bottom: 20px;
-      text-align: center; background: rgba(255, 255, 255, 0.9);
+      font-size: 14px; color: var(--text-dark); margin: 16px auto 0;
+      text-align: center; background: rgba(255, 255, 255, 0.95);
       padding: 10px 20px; border-radius: 16px; flex-shrink: 0;
       box-shadow: 0 4px 6px rgba(0,0,0,0.05);
       border: 2px solid #fff;
+      width: max-content;
+      max-width: 90%;
     }
+
+    /* 퍼즐판 스크롤 영역 */
+    .board-wrap {
+      flex: 1;
+      overflow: auto;
+      display: flex;
+      padding: 20px; /* 잘림 방지 넉넉한 여백 */
+    }
+    
+    .board-wrap::-webkit-scrollbar { width: 10px; height: 10px; }
+    .board-wrap::-webkit-scrollbar-track { background: transparent; }
+    .board-wrap::-webkit-scrollbar-thumb { background: #9AE6B4; border-radius: 10px; border: 2px solid #E6FFFA;}
 
     .board { 
       display: grid; 
       width: 100%; 
-      max-width: 550px; 
+      max-width: 500px; /* 사이즈 압축으로 한 화면에 쏙 */
       gap: var(--cell-gap); 
-      margin: auto; /* 상하좌우 중앙 정렬 */
+      margin: auto; 
     }
 
-    /* 칸(Cell) 디자인 대비감 확실하게! */
     .cell {
       width: 100%;
       aspect-ratio: 1 / 1; 
-      border: 2px solid #A0AEC0; /* 테두리를 조금 더 진하게 */
+      border: 2px solid #A0AEC0; 
       border-radius: 8px;
       background: #fff; position: relative; transition: all 0.2s;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* 칸마다 그림자 추가 */
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05); 
     }
     
     .cell input {
       width: 100%; height: 100%; border: none; outline: none; border-radius: 6px;
       text-align: center; background: transparent; 
-      font-size: clamp(14px, 3vw, 24px); 
+      font-size: clamp(16px, 3.5vw, 26px); 
       font-family: 'CookieRun', sans-serif; font-weight: 700; color: #1A202C; padding: 0;
     }
     
@@ -144,34 +153,32 @@
     
     .block { visibility: hidden; border: none; box-shadow: none; }
     
-    /* 선택된 칸 강조 */
     .cell.active { border: 3px solid var(--accent-color); box-shadow: 0 4px 12px rgba(255, 192, 69, 0.5); z-index: 10; transform: scale(1.05);}
     .cell.correct { border: 2px solid var(--main-color); }
     .cell.correct input { background: #D1FAE5; color: var(--main-color-dark); }
     .cell.wrong { border: 2px solid #FC8181; }
     .cell.wrong input { background: #FFF5F5; color: #E53E3E; }
 
-
-    /* 2. 오른쪽 힌트 사이드바 (레이아웃 3단 분리: 헤더-바디-푸터) */
+    /* 오른쪽 힌트 사이드바 */
     .sidebar { 
       width: 360px; 
       flex-shrink: 0;
-      background: rgba(255, 255, 255, 0.95);
       border: 2px solid #fff;
     }
     .sidebar-header { background: var(--main-color); color: #fff; padding: 16px; font-size: 18px; font-weight: 700; text-align: center; flex-shrink: 0;}
     
-    /* 힌트 목록만 스크롤 되도록 분리 */
     .sidebar-body { 
-      padding: 16px; 
+      padding: 16px 16px 40px 16px; /* 맨 아래 힌트가 안 가려지게 하단 여백 추가 */
       overflow-y: auto; 
       flex: 1; 
     }
-    .sidebar-body::-webkit-scrollbar { width: 6px; }
-    .sidebar-body::-webkit-scrollbar-track { background: transparent; }
+    
+    /* 스크롤바가 눈에 잘 띄게 수정 */
+    .sidebar-body::-webkit-scrollbar { width: 8px; }
+    .sidebar-body::-webkit-scrollbar-track { background: #F7FAFC; border-radius: 10px; }
     .sidebar-body::-webkit-scrollbar-thumb { background: #CBD5E0; border-radius: 10px; }
+    .sidebar-body::-webkit-scrollbar-thumb:hover { background: #A0AEC0; }
 
-    /* 하단 버튼 고정 영역 */
     .sidebar-footer {
       padding: 16px;
       background: #fff;
@@ -180,7 +187,7 @@
     }
 
     .section-title { margin: 0 0 10px; font-size: 16px; color: var(--main-color-dark); padding-bottom: 6px; border-bottom: 2px dashed #E2E8F0;}
-    .clue-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+    .clue-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; }
     .clue-card { border: 2px solid #EDF2F7; background: #fff; border-radius: 16px; padding: 12px; cursor: pointer; transition: all 0.2s; }
     .clue-card.active { border-color: var(--accent-color); background: #FFFFAF; box-shadow: 0 4px 10px rgba(255, 192, 69, 0.2); }
     .clue-card.correct { background: #E6FFFA; border-color: var(--main-color); }
@@ -201,17 +208,12 @@
     .reset-btn { background: #A0AEC0; box-shadow: 0 4px 0 #718096; margin-top: 4px;}
     .result-box { margin-top: 12px; padding: 12px; font-weight: 700; color: var(--main-color-dark); background: #E6FFFA; border-radius: 12px; border: 2px dashed var(--main-color); display: none; line-height: 1.5; text-align: center; font-size: 14px;}
 
-    /* =========================================
-       모바일 화면 분기 
-       ========================================= */
     @media (max-width: 900px) {
       .app { height: auto; min-height: 100vh; padding: 10px; }
       .layout { flex-direction: column; gap: 16px; }
-      .board-panel { padding: 16px 10px; }
+      .board-wrap { padding: 10px; }
       .sidebar { width: 100%; flex: none; }
-      
-      /* 모바일에서는 사이드바 스크롤 대신 화면 전체 스크롤 활용 */
-      .sidebar-body { overflow-y: visible; padding: 16px 12px; }
+      .sidebar-body { overflow-y: visible; padding: 16px; }
     }
   </style>
 </head>
@@ -229,19 +231,20 @@
     </header>
 
     <main class="layout">
-      <!-- 1. 퍼즐판 영역 -->
+      <!-- 1. 11x11로 최적화된 퍼즐판 영역 -->
       <section class="panel board-panel">
         <div class="board-top-note">
-          한글 조합 오류를 막기 위해 <strong>꼭 한 칸씩 터치해서</strong> 적어주세요!<br>힌트를 누르면 적을 위치를 알려줍니다.
+          한글 오류를 막기 위해 <strong>꼭 한 칸씩 터치해서</strong> 적어주세요!<br>힌트를 누르면 적을 위치를 알려줍니다.
         </div>
-        <div id="board" class="board"></div>
+        <div class="board-wrap">
+          <div id="board" class="board"></div>
+        </div>
       </section>
 
       <!-- 2. 사이드바 영역 -->
       <aside class="panel sidebar">
         <div class="sidebar-header">💡 지혜의 열쇠 💡</div>
         
-        <!-- 스크롤 되는 힌트 목록 -->
         <div class="sidebar-body">
           <h2 class="section-title">👉 가로</h2>
           <div id="acrossList" class="clue-list"></div>
@@ -250,7 +253,6 @@
           <div id="downList" class="clue-list"></div>
         </div>
 
-        <!-- 하단에 고정된 버튼 영역 -->
         <div class="sidebar-footer">
           <div class="actions">
             <button id="submitBtn" class="action-btn submit-btn">다 풀었어요! (제출)</button>
@@ -263,24 +265,25 @@
   </div>
 
   <script>
+    // 🔥 퍼즐 십자 교차 대규모 업데이트! (11x11 사이즈 최적화)
     const PUZZLE = {
-      size: 14,
+      size: 11, // 사이즈를 줄여서 한 화면에 잘 들어오게 함
       words: [
-        { id: "a1", no: 1, dir: "across", row: 0, col: 0, answer: "배리어프리", hint: "장애인과 비장애인 모두가 불편 없이 이용할 수 있도록 장벽을 없애려는 개념." },
-        { id: "d1", no: 1, dir: "down", row: 0, col: 0, answer: "배려", hint: "다른 사람을 존중하고 도와주려는 따뜻한 마음." },
-        { id: "a3", no: 3, dir: "across", row: 2, col: 4, answer: "보조기기", hint: "장애인의 이동, 의사소통, 생활을 돕는 편리한 도구들." },
-        { id: "a5", no: 5, dir: "across", row: 0, col: 9, answer: "점자", hint: "시각장애인이 손끝으로 톡톡 읽을 수 있도록 만든 글자." },
-        { id: "d6", no: 6, dir: "down", row: 0, col: 10, answer: "자립", hint: "누군가의 도움을 받더라도 내 삶의 주인으로 스스로 꾸려 나가는 것." },
-        { id: "d4", no: 4, dir: "down", row: 0, col: 12, answer: "리프트", hint: "휠체어를 탄 친구가 높은 층을 오르내릴 때 타는 장치." },
-        { id: "d12", no: 12, dir: "down", row: 4, col: 10, answer: "이동권", hint: "우리가 가고 싶은 곳을 안전하고 자유롭게 다닐 수 있는 권리." },
-        { id: "a7", no: 7, dir: "across", row: 6, col: 0, answer: "경사로", hint: "휠체어나 유모차가 계단 대신 쉽게 올라갈 수 있는 비탈길." },
-        { id: "d8", no: 8, dir: "down", row: 6, col: 1, answer: "사회", hint: "나와 다른 모습의 친구들이 모두 모여 함께 살아가는 곳." },
-        { id: "a9", no: 9, dir: "across", row: 8, col: 5, answer: "인권", hint: "사람이라면 누구나 당연히 존중받아야 하는 소중한 권리." },
-        { id: "d9", no: 9, dir: "down", row: 8, col: 5, answer: "인식", hint: "어떤 것을 이해하고 받아들이는 우리의 생각이나 태도." },
-        { id: "a11", no: 11, dir: "across", row: 10, col: 3, answer: "포용", hint: "나와 다르다고 멀리하지 않고, 넓은 마음으로 감싸 안아주는 것." },
-        { id: "d14", no: 14, dir: "down", row: 9, col: 12, answer: "공감", hint: "다른 친구의 마음을 내 마음처럼 같이 느끼고 이해해 주는 것." },
-        { id: "a13", no: 13, dir: "across", row: 12, col: 0, answer: "존중", hint: "친구가 나와 달라도 그 모습 그대로 소중하게 여겨주는 마음." },
-        { id: "a15", no: 15, dir: "across", row: 12, col: 8, answer: "수어", hint: "손동작, 표정, 몸짓으로 내 마음을 전달하는 아름다운 언어." }
+        { id: "d7", no: 1, dir: "down", row: 1, col: 5, answer: "이동권", hint: "우리가 가고 싶은 곳을 안전하고 자유롭게 다닐 수 있는 권리." },
+        { id: "a3", no: 2, dir: "across", row: 1, col: 7, answer: "보조기기", hint: "장애인의 이동, 의사소통, 생활을 돕는 편리한 도구들." },
+        { id: "a7", no: 3, dir: "across", row: 2, col: 0, answer: "경사로", hint: "휠체어나 유모차가 계단 대신 쉽게 올라갈 수 있는 비탈길." },
+        { id: "d8", no: 4, dir: "down", row: 2, col: 1, answer: "사회", hint: "나와 다른 모습의 친구들이 모두 모여 함께 살아가는 곳." },
+        { id: "a9", no: 5, dir: "across", row: 3, col: 4, answer: "인권", hint: "사람이라면 누구나 당연히 존중받아야 하는 소중한 권리." },
+        { id: "d9", no: 5, dir: "down", row: 3, col: 4, answer: "인식", hint: "어떤 것을 이해하고 받아들이는 우리의 생각이나 태도." },
+        { id: "d11", no: 7, dir: "down", row: 3, col: 8, answer: "포용", hint: "나와 다르다고 멀리하지 않고, 넓은 마음으로 감싸 안아주는 것." },
+        { id: "d15", no: 8, dir: "down", row: 5, col: 2, answer: "수어", hint: "손동작, 표정, 몸짓으로 내 마음을 전달하는 아름다운 언어." },
+        { id: "a14", no: 9, dir: "across", row: 5, col: 9, answer: "공감", hint: "다른 친구의 마음을 내 마음처럼 같이 느끼고 이해해 주는 것." },
+        { id: "a1", no: 10, dir: "across", row: 6, col: 0, answer: "배리어프리", hint: "모두가 불편 없이 이용할 수 있도록 장벽을 없애려는 개념." },
+        { id: "d1", no: 10, dir: "down", row: 6, col: 0, answer: "배려", hint: "다른 사람을 존중하고 도와주려는 따뜻한 마음." },
+        { id: "d4", no: 12, dir: "down", row: 6, col: 1, answer: "리프트", hint: "휠체어를 탄 친구가 높은 층을 오르내릴 때 타는 장치." },
+        { id: "d13", no: 13, dir: "down", row: 7, col: 10, answer: "존중", hint: "친구가 나와 달라도 그 모습 그대로 소중하게 여겨주는 마음." },
+        { id: "a5", no: 14, dir: "across", row: 8, col: 3, answer: "점자", hint: "시각장애인이 손끝으로 톡톡 읽을 수 있도록 만든 글자." },
+        { id: "d6", no: 15, dir: "down", row: 8, col: 4, answer: "자립", hint: "누군가의 도움을 받더라도 내 삶의 주인으로 스스로 꾸려 나가는 것." }
       ]
     };
 
@@ -463,7 +466,6 @@
       let message = solved === PUZZLE.words.length ? "최고예요! 전부 맞혔어요! 🎉" : "아쉽지만 잘했어요! 다시 도전할까요? 💪";
       resultBox.innerHTML = `채점 결과: <strong>${solved} / ${PUZZLE.words.length}</strong> 정답<br>소요 시간: <strong>${formatTime(state.elapsedSec)}</strong><br>${message}`;
       resultBox.style.display = "block";
-      resultBox.scrollIntoView({ behavior: 'smooth' });
     });
 
     document.getElementById("resetBtn").addEventListener("click", () => {
@@ -471,7 +473,7 @@
     });
 
     buildGrid(); renderBoard(); renderClues(); updateProgress(); startTimer();
-    selectWord("a1");
+    selectWord("d7");
   </script>
 </body>
 </html>
