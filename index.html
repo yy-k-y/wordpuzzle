@@ -20,7 +20,7 @@
       --text-dark: #2D3748;
       --text-light: #718096;
       --shadow: 0 8px 24px rgba(56, 201, 163, 0.15);
-      --cell-gap: 3px; 
+      --cell-gap: 4px; 
     }
 
     * { box-sizing: border-box; }
@@ -30,7 +30,7 @@
       font-family: 'CookieRun', 'Comic Sans MS', 'Malgun Gothic', sans-serif;
       background: linear-gradient(135deg, var(--bg-top), var(--bg-bottom));
       color: var(--text-dark);
-      overflow-y: auto; 
+      overflow: hidden; /* 페이지 전체 스크롤 원천 차단 */
     }
 
     .app {
@@ -39,15 +39,14 @@
       padding: 16px;
       height: 100vh;
       height: 100dvh;
-      min-height: 700px; 
       display: flex;
       flex-direction: column;
     }
 
-    .top-header { text-align: center; margin-bottom: 16px; flex-shrink: 0; }
+    .top-header { text-align: center; margin-bottom: 12px; flex-shrink: 0; }
     .top-header h1 {
-      margin: 0 0 16px;
-      font-size: clamp(24px, 4vw, 42px);
+      margin: 0 0 12px;
+      font-size: clamp(22px, 4vw, 38px);
       font-weight: 700;
       color: var(--main-color-dark);
       text-shadow: 2px 2px 0px #fff, 4px 4px 0px rgba(56,201,163,0.2);
@@ -56,30 +55,30 @@
     .top-row { display: flex; gap: 12px; justify-content: center; align-items: center; flex-wrap: wrap; }
 
     .progress-shell {
-      min-width: 220px; background: #fff; border-radius: 30px; padding: 10px 18px;
-      box-shadow: var(--shadow); display: flex; align-items: center; gap: 12px;
+      min-width: 200px; background: #fff; border-radius: 30px; padding: 8px 16px;
+      box-shadow: var(--shadow); display: flex; align-items: center; gap: 10px;
       border: 2px solid #E2E8F0; flex: 1; max-width: 350px;
     }
-    .progress-track { flex: 1; height: 14px; background: #EDF2F7; border-radius: 999px; overflow: hidden; }
+    .progress-track { flex: 1; height: 12px; background: #EDF2F7; border-radius: 999px; overflow: hidden; }
     .progress-fill { width: 0%; height: 100%; background: linear-gradient(90deg, #6EE7B7, var(--main-color)); border-radius: 999px; transition: width 0.4s ease; }
-    .progress-text { font-weight: 700; color: var(--main-color-dark); white-space: nowrap; font-size: 15px;}
+    .progress-text { font-weight: 700; color: var(--main-color-dark); white-space: nowrap; font-size: 14px;}
 
     .timer-pill {
-      background: #fff; padding: 10px 18px; border-radius: 30px;
+      background: #fff; padding: 8px 16px; border-radius: 30px;
       box-shadow: var(--shadow); font-weight: 700; color: var(--accent-color);
-      font-size: 16px; border: 2px solid #E2E8F0;
+      font-size: 15px; border: 2px solid #E2E8F0;
     }
 
     .layout {
       display: flex;
       flex-direction: row;
-      gap: 20px;
+      gap: 16px;
       flex: 1;
-      min-height: 0; 
+      min-height: 0; /* 내부 스크롤을 위해 필수 */
     }
 
     .panel {
-      border-radius: 24px;
+      border-radius: 20px;
       box-shadow: var(--shadow);
       display: flex;
       flex-direction: column;
@@ -87,7 +86,7 @@
       background: #fff;
     }
 
-    /* 1. 퍼즐판 패널: 스크롤 없애고 화면에 꽉 차게 변경! */
+    /* 🔥 1. 퍼즐판 패널: 스크롤 절대 안 생기게 자동 축소! */
     .board-panel { 
       flex: 1; 
       display: flex;
@@ -96,35 +95,39 @@
       background-image: linear-gradient(#D1FAE5 1px, transparent 1px), linear-gradient(90deg, #D1FAE5 1px, transparent 1px);
       background-size: 20px 20px;
       border: 4px solid #fff;
-      min-height: 0;
       padding: 16px;
+      min-height: 0;
     }
     
     .board-top-note {
-      font-size: 14px; color: var(--text-dark); margin: 0 auto 16px;
+      font-size: 13px; color: var(--text-dark); margin: 0 auto 12px;
       text-align: center; background: rgba(255, 255, 255, 0.95);
-      padding: 10px 20px; border-radius: 16px; flex-shrink: 0;
+      padding: 8px 16px; border-radius: 12px; flex-shrink: 0;
       box-shadow: 0 4px 6px rgba(0,0,0,0.05);
       border: 2px solid #fff;
       width: max-content;
-      max-width: 90%;
+      max-width: 95%;
     }
 
-    /* 스크롤 없앰! 중앙 정렬 & 최대 크기 제한으로 비율 유지 */
+    /* 퍼즐 래퍼: 스크롤을 완전히 없애고 중앙에 띄움 */
     .board-wrap {
       flex: 1;
       display: flex;
       justify-content: center;
-      align-items: center; /* 세로 중앙 정렬 */
+      align-items: center; /* 상하좌우 정중앙 */
       width: 100%;
       height: 100%;
+      overflow: hidden; /* 스크롤바 원천 차단 */
     }
     
+    /* 12x12 사이즈 정사각형 자동 비율 조절 */
     .board { 
       display: grid; 
       width: 100%; 
-      max-width: 500px; /* PC에서도 너무 커지지 않게 제한 */
-      aspect-ratio: 1 / 1; /* 완벽한 정사각형 유지 */
+      height: 100%;
+      max-width: 550px; 
+      max-height: 550px; /* 가로세로 최대치 고정 */
+      aspect-ratio: 1 / 1; /* 무조건 정사각형 유지 */
       gap: var(--cell-gap); 
       margin: auto; 
     }
@@ -132,24 +135,23 @@
     .cell {
       width: 100%;
       height: 100%;
-      aspect-ratio: 1 / 1; 
       border: 2px solid #A0AEC0; 
       border-radius: 6px; 
       background: #fff; position: relative; transition: all 0.2s;
       box-shadow: 0 1px 3px rgba(0,0,0,0.05); 
     }
     
+    /* 화면 크기에 맞춰 글자도 자동으로 작아짐 */
     .cell input {
       width: 100%; height: 100%; border: none; outline: none; border-radius: 4px;
       text-align: center; background: transparent; 
-      /* 화면이 작아지면 글씨도 알아서 작아지게! */
-      font-size: clamp(12px, 3.5vw, 24px); 
+      font-size: clamp(12px, min(3vw, 3vh), 24px); 
       font-family: 'CookieRun', sans-serif; font-weight: 700; color: #1A202C; padding: 0;
     }
     
     .cell-number { 
       position: absolute; top: 1px; left: 3px; 
-      font-size: clamp(8px, 1.2vw, 11px); 
+      font-size: clamp(8px, 1.2vw, 10px); 
       font-weight: 700; color: var(--main-color-dark); pointer-events: none; 
     }
     
@@ -162,13 +164,13 @@
     .cell.wrong input { background: #FFF5F5; color: #E53E3E; }
 
 
-    /* 2. 사이드바 영역 */
+    /* 2. 사이드바 영역 (여기만 스크롤 가능) */
     .sidebar { 
-      width: 380px; 
+      width: 360px; 
       flex-shrink: 0;
       border: 2px solid #fff;
     }
-    .sidebar-header { background: var(--main-color); color: #fff; padding: 16px; font-size: 18px; font-weight: 700; text-align: center; flex-shrink: 0;}
+    .sidebar-header { background: var(--main-color); color: #fff; padding: 14px; font-size: 16px; font-weight: 700; text-align: center; flex-shrink: 0;}
     
     .sidebar-body { 
       padding: 16px 16px 40px 16px; 
@@ -176,47 +178,46 @@
       flex: 1; 
     }
     
-    .sidebar-body::-webkit-scrollbar { width: 8px; }
+    .sidebar-body::-webkit-scrollbar { width: 6px; }
     .sidebar-body::-webkit-scrollbar-track { background: #F7FAFC; border-radius: 10px; }
     .sidebar-body::-webkit-scrollbar-thumb { background: #CBD5E0; border-radius: 10px; }
     .sidebar-body::-webkit-scrollbar-thumb:hover { background: #A0AEC0; }
 
     .sidebar-footer {
-      padding: 16px;
+      padding: 12px;
       background: #fff;
       border-top: 2px dashed #E2E8F0;
       flex-shrink: 0;
     }
 
-    .section-title { margin: 0 0 10px; font-size: 16px; color: var(--main-color-dark); padding-bottom: 6px; border-bottom: 2px dashed #E2E8F0;}
-    .clue-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; }
-    .clue-card { border: 2px solid #EDF2F7; background: #fff; border-radius: 16px; padding: 12px; cursor: pointer; transition: all 0.2s; }
+    .section-title { margin: 0 0 10px; font-size: 15px; color: var(--main-color-dark); padding-bottom: 6px; border-bottom: 2px dashed #E2E8F0;}
+    .clue-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+    .clue-card { border: 2px solid #EDF2F7; background: #fff; border-radius: 14px; padding: 12px; cursor: pointer; transition: all 0.2s; }
     .clue-card.active { border-color: var(--accent-color); background: #FFFFAF; box-shadow: 0 4px 10px rgba(255, 192, 69, 0.2); }
     .clue-card.correct { background: #E6FFFA; border-color: var(--main-color); }
     .clue-card.wrong { background: #FFF5F5; border-color: #FC8181; }
 
     .clue-head { display: flex; gap: 8px; align-items: center; margin-bottom: 6px; }
-    .badge { min-width: 28px; height: 28px; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 13px; }
+    .badge { min-width: 24px; height: 24px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 12px; }
     .badge.across { background: var(--accent-color); }
     .badge.down { background: #63B3ED; }
-    .chip { padding: 4px 8px; border-radius: 10px; font-size: 12px; font-weight: 700;}
+    .chip { padding: 4px 8px; border-radius: 8px; font-size: 11px; font-weight: 700;}
     .chip.initial { background: #EBF4FF; color: #4299E1; border: 1px solid #BEE3F8; }
-    .clue-text { margin: 0; line-height: 1.4; color: var(--text-dark); font-size: 14px; word-break: keep-all; }
+    .clue-text { margin: 0; line-height: 1.4; color: var(--text-dark); font-size: 13px; word-break: keep-all; }
 
-    .actions { display: flex; flex-direction: column; gap: 8px; }
-    .action-btn { border: none; border-radius: 16px; padding: 14px; font-size: 16px; font-weight: 700; cursor: pointer; color: #fff; font-family: 'CookieRun', sans-serif; transition: transform 0.1s;}
+    .actions { display: flex; flex-direction: column; gap: 6px; }
+    .action-btn { border: none; border-radius: 14px; padding: 12px; font-size: 15px; font-weight: 700; cursor: pointer; color: #fff; font-family: 'CookieRun', sans-serif; transition: transform 0.1s;}
     .action-btn:active { transform: scale(0.97); }
     .submit-btn { background: var(--main-color); box-shadow: 0 4px 0 var(--main-color-dark); }
     .reset-btn { background: #A0AEC0; box-shadow: 0 4px 0 #718096; margin-top: 4px;}
-    .result-box { margin-top: 12px; padding: 12px; font-weight: 700; color: var(--main-color-dark); background: #E6FFFA; border-radius: 12px; border: 2px dashed var(--main-color); display: none; line-height: 1.5; text-align: center; font-size: 14px;}
+    .result-box { margin-top: 10px; padding: 10px; font-weight: 700; color: var(--main-color-dark); background: #E6FFFA; border-radius: 10px; border: 2px dashed var(--main-color); display: none; line-height: 1.5; text-align: center; font-size: 13px;}
 
-    /* 모바일 환경 레이아웃 */
+    /* 모바일 환경 대응 */
     @media (max-width: 900px) {
-      .app { height: auto; min-height: 100vh; padding: 10px; }
-      .layout { flex-direction: column; gap: 16px; }
+      .app { padding: 10px; }
+      .layout { flex-direction: column; gap: 12px; }
       .board-panel { padding: 12px; }
-      .sidebar { width: 100%; flex: none; }
-      .sidebar-body { overflow-y: visible; padding: 16px; }
+      .sidebar { width: 100%; flex: 1; }
     }
   </style>
 </head>
@@ -234,7 +235,7 @@
     </header>
 
     <main class="layout">
-      <!-- 1. 스크롤 없이 한눈에 들어오는 퍼즐판! -->
+      <!-- 1. 한눈에 쏙! 스크롤이 절대 없는 완벽 비율 퍼즐판 -->
       <section class="panel board-panel">
         <div class="board-top-note">
           한글 오류 방지를 위해 <strong>꼭 한 칸씩 터치해서</strong> 적어주세요!<br>힌트를 누르면 적을 위치를 알려줍니다.
@@ -268,27 +269,24 @@
   </div>
 
   <script>
-    // 🔥 단어가 절대 이상하게 겹치지 않도록 완벽하게 재구성한 12x12 맵!
+    // 🔥 단어 뭉침 0%! 수학적으로 완벽하게 재설계된 12x12 크로스워드 좌표맵
     const PUZZLE = {
       size: 12, 
       words: [
-        { id: "a1", no: 1, dir: "across", row: 0, col: 1, answer: "저상버스", hint: "계단이 없어 휠체어나 유모차가 쉽게 탈 수 있도록 차체가 낮게 만들어진 버스." },
-        { id: "d2", no: 2, dir: "down", row: 0, col: 2, answer: "상동행동", hint: "몸을 흔들거나 손을 퍼덕이는 등 특별한 목적 없이 같은 동작을 반복하는 특징." },
-        { id: "d3", no: 3, dir: "down", row: 0, col: 8, answer: "수어", hint: "손동작, 표정, 몸짓으로 내 마음을 전달하는 아름다운 언어." },
-        { id: "a4", no: 4, dir: "across", row: 2, col: 5, answer: "배리어프리", hint: "장애인과 비장애인 모두 불편 없이 이용하도록 물리적, 제도적 장벽을 없애는 개념." },
-        { id: "d4", no: 4, dir: "down", row: 2, col: 5, answer: "배려", hint: "다른 사람을 돕고 존중하려는 따뜻한 마음." },
-        { id: "d5", no: 5, dir: "down", row: 2, col: 10, answer: "리프트", hint: "휠체어를 탄 친구가 높은 층을 오르내릴 때 타는 장치." },
-        { id: "a6", no: 6, dir: "across", row: 4, col: 0, answer: "발달장애", hint: "지적 장애와 자폐성 장애를 아울러서 부르는 말." },
-        { id: "d7", no: 7, dir: "down", row: 4, col: 1, answer: "달팽이관", hint: "귀 속에서 소리를 듣는 역할을 하는 기관. 인공 달팽이관 수술을 하기도 해요." },
-        { id: "a8", no: 8, dir: "across", row: 5, col: 7, answer: "이동권", hint: "우리가 가고 싶은 곳을 안전하고 자유롭게 다닐 수 있는 권리." },
-        { id: "a9", no: 9, dir: "across", row: 7, col: 0, answer: "점자", hint: "시각장애인이 손끝으로 톡톡 읽을 수 있도록 만든 글자." },
-        { id: "d10", no: 10, dir: "down", row: 7, col: 1, answer: "자립", hint: "누군가의 도움을 받더라도 내 삶의 주인으로 스스로 꾸려 나가는 것." },
-        { id: "a11", no: 11, dir: "across", row: 7, col: 4, answer: "보조기기", hint: "장애인의 이동, 의사소통, 학습을 돕는 다양한 장치들." },
-        { id: "d12", no: 12, dir: "down", row: 7, col: 8, answer: "공감", hint: "다른 친구의 마음을 내 마음처럼 같이 느끼고 이해해 주는 것." },
-        { id: "a13", no: 13, dir: "across", row: 9, col: 3, answer: "인권", hint: "사람이라면 누구나 태어날 때부터 가지는 존중받아야 할 소중한 권리." },
-        { id: "d13", no: 13, dir: "down", row: 9, col: 3, answer: "인식", hint: "어떤 것을 이해하고 받아들이는 우리의 생각이나 태도." },
-        { id: "a14", no: 14, dir: "across", row: 11, col: 1, answer: "쉬운말", hint: "발달장애인이 이해하기 편하도록 어려운 단어를 쉽게 풀어쓴 말." },
-        { id: "a15", no: 15, dir: "across", row: 11, col: 6, answer: "휠체어", hint: "지체장애인이나 뇌병변장애인이 이동할 때 타는 바퀴 달린 의자." }
+        { id: "d1", no: 1, dir: "down", row: 0, col: 3, answer: "휠체어", hint: "지체장애인이나 뇌병변장애인이 이동할 때 타는 바퀴 달린 의자." },
+        { id: "a2", no: 2, dir: "across", row: 0, col: 6, answer: "발달장애", hint: "지적 장애와 자폐성 장애를 아울러서 부르는 말." },
+        { id: "a3", no: 3, dir: "across", row: 2, col: 1, answer: "배리어프리", hint: "모두가 불편 없이 이용하도록 물리적, 제도적 장벽을 없애는 개념." },
+        { id: "d3", no: 3, dir: "down", row: 2, col: 1, answer: "배려", hint: "다른 사람을 돕고 존중하려는 따뜻한 마음." },
+        { id: "d4", no: 4, dir: "down", row: 2, col: 5, answer: "리프트", hint: "휠체어를 탄 친구가 높은 층을 오르내릴 때 타는 장치." },
+        { id: "a5", no: 5, dir: "across", row: 5, col: 0, answer: "점자", hint: "시각장애인이 손끝으로 톡톡 읽을 수 있도록 만든 글자." },
+        { id: "d6", no: 6, dir: "down", row: 5, col: 1, answer: "자립", hint: "누군가의 도움을 받더라도 내 삶의 주인으로 스스로 꾸려 나가는 것." },
+        { id: "d7", no: 7, dir: "down", row: 6, col: 5, answer: "저상버스", hint: "계단이 없어 휠체어나 유모차가 쉽게 탈 수 있도록 차체가 낮게 만들어진 버스." },
+        { id: "d8", no: 8, dir: "down", row: 6, col: 8, answer: "이동권", hint: "우리가 가고 싶은 곳을 안전하고 자유롭게 다닐 수 있는 권리." },
+        { id: "a9", no: 9, dir: "across", row: 7, col: 5, answer: "상동행동", hint: "특별한 목적 없이 같은 동작을 반복하는 자폐성 장애의 특징." },
+        { id: "a10", no: 10, dir: "across", row: 8, col: 7, answer: "인권", hint: "사람이라면 누구나 태어날 때부터 가지는 존중받아야 할 소중한 권리." },
+        { id: "d10", no: 10, dir: "down", row: 8, col: 7, answer: "인식", hint: "어떤 것을 이해하고 받아들이는 우리의 생각이나 태도." },
+        { id: "a11", no: 11, dir: "across", row: 10, col: 1, answer: "쉬운말", hint: "발달장애인이 이해하기 편하도록 어려운 단어를 쉽게 풀어쓴 말." },
+        { id: "a12", no: 12, dir: "across", row: 11, col: 4, answer: "보조기기", hint: "장애인의 이동, 의사소통, 학습을 돕는 다양한 장치들." }
       ]
     };
 
@@ -479,7 +477,7 @@
     });
 
     buildGrid(); renderBoard(); renderClues(); updateProgress(); startTimer();
-    selectWord("a1");
+    selectWord("a2");
   </script>
 </body>
 </html>
