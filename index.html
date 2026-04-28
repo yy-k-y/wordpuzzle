@@ -29,7 +29,7 @@
       font-family: 'CookieRun', 'Comic Sans MS', 'Malgun Gothic', sans-serif;
       background: linear-gradient(135deg, var(--bg-top), var(--bg-bottom));
       color: var(--text-dark);
-      /* 페이지 전체 스크롤을 막아 앱처럼 고정시킵니다 */
+      /* 페이지 전체 스크롤을 막아 앱처럼 고정! */
       overflow: hidden; 
     }
 
@@ -45,7 +45,7 @@
 
     .top-header { text-align: center; margin-bottom: 12px; flex-shrink: 0; }
     .top-header h1 {
-      margin: 0 0 12px;
+      margin: 0 0 10px;
       font-size: clamp(22px, 4vw, 36px);
       font-weight: 700;
       color: var(--main-color-dark);
@@ -86,7 +86,7 @@
       background: #fff;
     }
 
-    /* 1. 퍼즐판 영역: 스크롤 원천 차단 & 한눈에 쏙 */
+    /* 1. 퍼즐판 영역: 스크롤 절대 안 생기게 자동 축소! */
     .board-panel { 
       flex: 1; 
       display: flex;
@@ -96,7 +96,7 @@
       background-size: 20px 20px;
       border: 4px solid #fff;
       padding: 16px;
-      min-height: 0;
+      min-height: 0; /* 중요: 영역이 넘치지 않도록 제한 */
     }
     
     .board-top-note {
@@ -109,23 +109,25 @@
       max-width: 100%;
     }
 
+    /* 📌 퍼즐 래퍼: 스크롤바를 없애고 화면 중앙에 고정 */
     .board-wrap {
       flex: 1;
       display: flex;
       justify-content: center;
-      align-items: center; /* 상하좌우 완벽 중앙 정렬 */
+      align-items: center;
       width: 100%;
       height: 100%;
-      overflow: hidden; /* 퍼즐판 내부 스크롤 완벽 제거 */
+      overflow: hidden; 
     }
     
-    /* 11x11 사이즈 고정 비율 유지 */
+    /* 📌 비율 고정: 화면이 작아지면 퍼즐도 자동으로 작아짐 */
     .board { 
       display: grid; 
       width: 100%; 
-      max-width: 500px;
-      max-height: 100%;
-      aspect-ratio: 1 / 1; /* 정사각형 유지 */
+      height: 100%;
+      max-width: 550px;
+      max-height: 550px;
+      aspect-ratio: 1 / 1; 
       gap: var(--cell-gap); 
       margin: auto; 
     }
@@ -139,16 +141,17 @@
       box-shadow: 0 1px 3px rgba(0,0,0,0.05); 
     }
     
+    /* 화면 크기에 맞춰 글자도 자동으로 축소 */
     .cell input {
       width: 100%; height: 100%; border: none; outline: none; border-radius: 4px;
       text-align: center; background: transparent; 
-      font-size: clamp(14px, 4vw, 24px); 
+      font-size: clamp(12px, 3vmin, 26px); 
       font-family: 'CookieRun', sans-serif; font-weight: 700; color: #1A202C; padding: 0;
     }
     
     .cell-number { 
       position: absolute; top: 1px; left: 3px; 
-      font-size: clamp(9px, 1.5vw, 11px); 
+      font-size: clamp(8px, 1.2vmin, 12px); 
       font-weight: 700; color: var(--main-color-dark); pointer-events: none; 
     }
     
@@ -161,7 +164,7 @@
     .cell.wrong input { background: #FFF5F5; color: #E53E3E; }
 
 
-    /* 2. 사이드바 영역 (여기만 스크롤 가능) */
+    /* 2. 사이드바 영역 (힌트 영역만 스크롤 가능!) */
     .sidebar { 
       width: 360px; 
       flex-shrink: 0;
@@ -209,15 +212,11 @@
     .reset-btn { background: #A0AEC0; box-shadow: 0 4px 0 #718096; margin-top: 4px;}
     .result-box { margin-top: 10px; padding: 10px; font-weight: 700; color: var(--main-color-dark); background: #E6FFFA; border-radius: 10px; border: 2px dashed var(--main-color); display: none; line-height: 1.5; text-align: center; font-size: 13px;}
 
-    /* 모바일 환경 세로 배치 */
+    /* 모바일 환경 대응 */
     @media (max-width: 900px) {
       .app { padding: 10px; }
       .layout { flex-direction: column; gap: 12px; }
-      .board-panel { 
-        padding: 10px; 
-        flex: none; /* 모바일에선 퍼즐판 크기만큼만 차지 */
-      }
-      .board-wrap { overflow: visible; }
+      .board-panel { padding: 10px; flex: none; height: 50vh; } /* 폰에서는 상단 절반 차지 */
       .sidebar { width: 100%; flex: 1; min-height: 0; }
     }
   </style>
@@ -236,10 +235,10 @@
     </header>
 
     <main class="layout">
-      <!-- 1. 스크롤 1도 없이 깔끔하게 한 화면에 보이는 퍼즐판! -->
+      <!-- 1. 스크롤 1도 없이 깔끔하게 한 화면에 자동 조절되는 퍼즐판! -->
       <section class="panel board-panel">
         <div class="board-top-note">
-          오류를 막기 위해 <strong>한 칸씩 터치해서</strong> 입력하세요!<br>힌트를 누르면 위치를 알려줍니다.
+          오류를 막기 위해 <strong>꼭 한 칸씩 터치해서</strong> 입력하세요!<br>힌트를 누르면 위치를 알려줍니다.
         </div>
         <div class="board-wrap">
           <div id="board" class="board"></div>
@@ -270,21 +269,26 @@
   </div>
 
   <script>
-    // 🔥 단어 간 평행/인접 오류를 100% 원천 차단한 완벽한 11x11 블록 구조!
-    // 각 블록은 십자(+)로만 교차하며 절대 옆으로 나란히 붙지 않습니다.
+    // 🔥 단어 겹침/뭉침 0%! 수학적으로 완벽하게 검증된 12x12 크로스워드 좌표
+    // 이 맵은 모든 평행하는 단어 사이에 무조건 1칸 이상의 공백이 존재합니다.
     const PUZZLE = {
-      size: 11, 
+      size: 12, 
       words: [
-        { id: "a1", no: 1, dir: "across", row: 1, col: 1, answer: "저상버스", hint: "계단이 없어 휠체어나 유모차가 쉽게 탈 수 있도록 차체가 낮게 만들어진 버스." },
-        { id: "d1", no: 1, dir: "down", row: 1, col: 2, answer: "상동행동", hint: "특별한 목적 없이 같은 동작을 반복하는 자폐성 장애의 특징." },
-        { id: "a2", no: 2, dir: "across", row: 1, col: 7, answer: "발달장애", hint: "지적 장애와 자폐성 장애를 아울러서 부르는 말." },
-        { id: "d3", no: 3, dir: "down", row: 1, col: 9, answer: "장애인", hint: "신체나 정신의 다름으로 인해 일상생활에 어려움을 겪는 사람." },
-        { id: "a4", no: 4, dir: "across", row: 3, col: 9, answer: "인식", hint: "어떤 것을 이해하고 받아들이는 우리의 생각이나 태도." },
-        { id: "a5", no: 5, dir: "across", row: 4, col: 1, answer: "이동권", hint: "우리가 가고 싶은 곳을 안전하고 자유롭게 다닐 수 있는 권리." },
-        { id: "d6", no: 6, dir: "down", row: 5, col: 3, answer: "휠체어", hint: "지체장애인이나 뇌병변장애인이 이동할 때 타는 바퀴 달린 의자." },
-        { id: "a7", no: 7, dir: "across", row: 7, col: 1, answer: "배리어프리", hint: "장애인과 비장애인 모두 불편 없이 이용하도록 장벽을 없애는 개념." },
-        { id: "d7", no: 7, dir: "down", row: 7, col: 1, answer: "배려", hint: "다른 사람을 존중하고 도와주려는 따뜻한 마음." },
-        { id: "d8", no: 8, dir: "down", row: 7, col: 5, answer: "리프트", hint: "휠체어를 탄 친구가 높은 층을 오르내릴 때 타는 장치." }
+        { id: "a1", no: 1, dir: "across", row: 2, col: 1, answer: "배리어프리", hint: "누구나 살기 좋게 물리적, 제도적 장벽을 허무는 운동." },
+        { id: "d2", no: 2, dir: "down", row: 1, col: 3, answer: "수어", hint: "손동작, 표정, 몸짓으로 내 마음을 전달하는 아름다운 언어." },
+        { id: "d3", no: 3, dir: "down", row: 2, col: 1, answer: "배려", hint: "다른 사람을 돕고 존중하려는 따뜻한 마음." },
+        { id: "a4", no: 4, dir: "across", row: 0, col: 7, answer: "저상버스", hint: "계단이 없어 휠체어나 유모차가 쉽게 탈 수 있도록 만들어진 버스." },
+        { id: "d5", no: 5, dir: "down", row: 0, col: 8, answer: "상동행동", hint: "특별한 목적 없이 같은 동작을 반복하는 자폐성 장애의 특징." },
+        { id: "a6", no: 6, dir: "across", row: 3, col: 7, answer: "이동권", hint: "우리가 가고 싶은 곳을 안전하고 자유롭게 다닐 수 있는 권리." },
+        { id: "a7", no: 7, dir: "across", row: 6, col: 5, answer: "발달장애", hint: "지적 장애와 자폐성 장애를 아울러서 부르는 말." },
+        { id: "d8", no: 8, dir: "down", row: 6, col: 7, answer: "장애인", hint: "신체나 정신의 다름으로 인해 일상생활에 어려움을 겪는 사람." },
+        { id: "a9", no: 9, dir: "across", row: 8, col: 7, answer: "인식", hint: "어떤 것을 이해하고 받아들이는 우리의 생각이나 태도." },
+        { id: "d10", no: 10, dir: "down", row: 8, col: 7, answer: "인권", hint: "사람이라면 누구나 태어날 때부터 가지는 존중받아야 할 소중한 권리." },
+        { id: "a11", no: 11, dir: "across", row: 5, col: 1, answer: "쉬운말", hint: "발달장애인이 이해하기 편하도록 어려운 단어를 쉽게 풀어쓴 말." },
+        { id: "a12", no: 12, dir: "across", row: 7, col: 1, answer: "휠체어", hint: "지체장애인이나 뇌병변장애인이 이동할 때 타는 바퀴 달린 의자." },
+        { id: "a13", no: 13, dir: "across", row: 9, col: 1, answer: "점자", hint: "시각장애인이 손끝으로 톡톡 읽을 수 있도록 만든 글자." },
+        { id: "d14", no: 14, dir: "down", row: 9, col: 2, answer: "자립", hint: "누군가의 도움을 받더라도 내 삶의 주인으로 스스로 꾸려 나가는 것." },
+        { id: "a15", no: 15, dir: "across", row: 11, col: 4, answer: "보조기기", hint: "장애인의 이동, 의사소통, 학습을 돕는 다양한 장치들." }
       ]
     };
 
@@ -386,7 +390,7 @@
           card.innerHTML = `
             <div class="clue-head">
               <span class="badge ${dir}">${word.no}</span>
-              <div><span class="chip initial">초성 힌트: ${getInitialConsonants(word.answer)}</span></div>
+              <div><span class="chip initial">초성: ${getInitialConsonants(word.answer)}</span></div>
             </div>
             <p class="clue-text">${word.hint}</p>
           `;
