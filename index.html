@@ -29,7 +29,7 @@
       font-family: 'CookieRun', 'Comic Sans MS', 'Malgun Gothic', sans-serif;
       background: linear-gradient(135deg, var(--bg-top), var(--bg-bottom));
       color: var(--text-dark);
-      /* 페이지 전체 스크롤을 막아 앱처럼 고정! */
+      /* 전체 화면 스크롤을 원천 차단하여 앱처럼 고정 */
       overflow: hidden; 
     }
 
@@ -45,7 +45,7 @@
 
     .top-header { text-align: center; margin-bottom: 12px; flex-shrink: 0; }
     .top-header h1 {
-      margin: 0 0 10px;
+      margin: 0 0 12px;
       font-size: clamp(22px, 4vw, 36px);
       font-weight: 700;
       color: var(--main-color-dark);
@@ -86,7 +86,7 @@
       background: #fff;
     }
 
-    /* 1. 퍼즐판 영역: 스크롤 절대 안 생기게 자동 축소! */
+    /* 1. 퍼즐판 패널 (스크롤 없이 화면에 꽉 맞게 자동 비율 축소!) */
     .board-panel { 
       flex: 1; 
       display: flex;
@@ -96,7 +96,7 @@
       background-size: 20px 20px;
       border: 4px solid #fff;
       padding: 16px;
-      min-height: 0; /* 중요: 영역이 넘치지 않도록 제한 */
+      min-height: 0; 
     }
     
     .board-top-note {
@@ -109,25 +109,23 @@
       max-width: 100%;
     }
 
-    /* 📌 퍼즐 래퍼: 스크롤바를 없애고 화면 중앙에 고정 */
     .board-wrap {
       flex: 1;
       display: flex;
       justify-content: center;
-      align-items: center;
+      align-items: center; /* 상하좌우 완벽 중앙 정렬 */
       width: 100%;
       height: 100%;
-      overflow: hidden; 
+      overflow: hidden; /* 퍼즐판 스크롤 원천 차단 */
     }
     
-    /* 📌 비율 고정: 화면이 작아지면 퍼즐도 자동으로 작아짐 */
     .board { 
       display: grid; 
       width: 100%; 
       height: 100%;
       max-width: 550px;
       max-height: 550px;
-      aspect-ratio: 1 / 1; 
+      aspect-ratio: 1 / 1; /* 완벽한 정사각형 유지 */
       gap: var(--cell-gap); 
       margin: auto; 
     }
@@ -141,11 +139,10 @@
       box-shadow: 0 1px 3px rgba(0,0,0,0.05); 
     }
     
-    /* 화면 크기에 맞춰 글자도 자동으로 축소 */
     .cell input {
       width: 100%; height: 100%; border: none; outline: none; border-radius: 4px;
       text-align: center; background: transparent; 
-      font-size: clamp(12px, 3vmin, 26px); 
+      font-size: clamp(12px, 3.5vmin, 26px); /* 화면 크기에 맞춰 글씨도 줄어듦 */
       font-family: 'CookieRun', sans-serif; font-weight: 700; color: #1A202C; padding: 0;
     }
     
@@ -164,7 +161,7 @@
     .cell.wrong input { background: #FFF5F5; color: #E53E3E; }
 
 
-    /* 2. 사이드바 영역 (힌트 영역만 스크롤 가능!) */
+    /* 2. 힌트 사이드바 (여기만 스크롤 가능) */
     .sidebar { 
       width: 360px; 
       flex-shrink: 0;
@@ -212,11 +209,11 @@
     .reset-btn { background: #A0AEC0; box-shadow: 0 4px 0 #718096; margin-top: 4px;}
     .result-box { margin-top: 10px; padding: 10px; font-weight: 700; color: var(--main-color-dark); background: #E6FFFA; border-radius: 10px; border: 2px dashed var(--main-color); display: none; line-height: 1.5; text-align: center; font-size: 13px;}
 
-    /* 모바일 환경 대응 */
+    /* 모바일 환경 대응 (퍼즐판이 상단 절반, 힌트가 하단 절반) */
     @media (max-width: 900px) {
       .app { padding: 10px; }
       .layout { flex-direction: column; gap: 12px; }
-      .board-panel { padding: 10px; flex: none; height: 50vh; } /* 폰에서는 상단 절반 차지 */
+      .board-panel { padding: 10px; flex: none; height: 45vh; } 
       .sidebar { width: 100%; flex: 1; min-height: 0; }
     }
   </style>
@@ -235,17 +232,16 @@
     </header>
 
     <main class="layout">
-      <!-- 1. 스크롤 1도 없이 깔끔하게 한 화면에 자동 조절되는 퍼즐판! -->
+      <!-- 스크롤 없이 한눈에 들어오는 퍼즐판! -->
       <section class="panel board-panel">
         <div class="board-top-note">
-          오류를 막기 위해 <strong>꼭 한 칸씩 터치해서</strong> 입력하세요!<br>힌트를 누르면 위치를 알려줍니다.
+          오류 방지를 위해 <strong>한 칸씩 터치해서</strong> 입력하세요!<br>힌트를 누르면 위치를 알려줍니다.
         </div>
         <div class="board-wrap">
           <div id="board" class="board"></div>
         </div>
       </section>
 
-      <!-- 2. 사이드바 영역 -->
       <aside class="panel sidebar">
         <div class="sidebar-header">💡 지혜의 열쇠 💡</div>
         
@@ -268,317 +264,214 @@
     </main>
   </div>
 
-<script>
-const PUZZLE = {
- size:12,
- words:[
-  { id:"a1", no:1, dir:"across", row:2, col:1, answer:"배리어프리", hint:"누구나 살기 좋게 물리적, 제도적 장벽을 허무는 운동." },
-  { id:"d2", no:2, dir:"down", row:1, col:3, answer:"수어", hint:"손동작, 표정, 몸짓으로 내 마음을 전달하는 아름다운 언어." },
-  { id:"d3", no:3, dir:"down", row:2, col:1, answer:"배려", hint:"다른 사람을 돕고 존중하려는 따뜻한 마음." },
-  { id:"a4", no:4, dir:"across", row:0, col:7, answer:"저상버스", hint:"계단이 없는 버스." },
-  { id:"d5", no:5, dir:"down", row:0, col:8, answer:"상동행동", hint:"반복 행동." },
-  { id:"a6", no:6, dir:"across", row:3, col:7, answer:"이동권", hint:"자유롭게 이동할 권리." },
-  { id:"a7", no:7, dir:"across", row:6, col:5, answer:"발달장애", hint:"지적장애와 자폐성 장애를 아우르는 말." },
-  { id:"d8", no:8, dir:"down", row:6, col:7, answer:"장애인", hint:"신체나 정신의 다름이 있는 사람." },
-  { id:"a9", no:9, dir:"across", row:8, col:7, answer:"인식", hint:"생각이나 태도." },
-  { id:"d10", no:10, dir:"down", row:8, col:7, answer:"인권", hint:"누구나 가진 권리." },
-  { id:"a11", no:11, dir:"across", row:5, col:1, answer:"쉬운말", hint:"이해하기 쉽게 풀어 쓴 말." },
-  { id:"a12", no:12, dir:"across", row:7, col:1, answer:"휠체어", hint:"바퀴 달린 이동 의자." },
-  { id:"a13", no:13, dir:"across", row:9, col:1, answer:"점자", hint:"시각장애인 문자." },
-  { id:"d14", no:14, dir:"down", row:9, col:2, answer:"자립", hint:"스스로 삶을 꾸려가기." },
-  { id:"a15", no:15, dir:"across", row:11, col:4, answer:"보조기기", hint:"생활을 돕는 장치." }
- ]
-};
+  <script>
+    // 🔥 수학적으로 단 1개의 오류도 없는 완벽한 정통 십자말풀이 좌표맵! (12x12)
+    // 평행한 단어끼리 절대 맞닿지 않으며 무조건 한 글자씩만 예쁘게 교차합니다.
+    const PUZZLE = {
+      size: 12, 
+      words: [
+        { id: "a1", no: 1, dir: "across", row: 0, col: 2, answer: "저상버스", hint: "계단이 없어 휠체어나 유모차가 쉽게 탈 수 있도록 차체가 낮게 만들어진 버스." },
+        { id: "d2", no: 2, dir: "down", row: 0, col: 3, answer: "상동행동", hint: "몸을 흔들거나 손을 퍼덕이는 등 특별한 목적 없이 같은 동작을 반복하는 특징." },
+        { id: "a3", no: 3, dir: "across", row: 3, col: 2, answer: "이동권", hint: "우리가 가고 싶은 곳을 안전하고 자유롭게 다닐 수 있는 권리." },
+        { id: "d4", no: 4, dir: "down", row: 5, col: 4, answer: "수어", hint: "손동작, 표정, 몸짓으로 내 마음을 전달하는 아름다운 언어." },
+        { id: "a5", no: 5, dir: "across", row: 6, col: 2, answer: "배리어프리", hint: "장애인과 비장애인 모두 불편 없이 이용하도록 물리적, 제도적 장벽을 없애는 개념." },
+        { id: "d5", no: 5, dir: "down", row: 6, col: 2, answer: "배려", hint: "다른 사람을 돕고 존중하려는 따뜻한 마음." },
+        { id: "a6", no: 6, dir: "across", row: 8, col: 3, answer: "발달장애", hint: "지적 장애와 자폐성 장애를 아울러서 부르는 말." },
+        { id: "d7", no: 7, dir: "down", row: 8, col: 5, answer: "장애인", hint: "신체나 정신의 다름으로 인해 일상생활에 어려움을 겪는 사람." },
+        { id: "a8", no: 8, dir: "across", row: 10, col: 1, answer: "점자", hint: "시각장애인이 손끝으로 톡톡 읽을 수 있도록 만든 글자." },
+        { id: "d9", no: 9, dir: "down", row: 10, col: 2, answer: "자립", hint: "누군가의 도움을 받더라도 내 삶의 주인으로 스스로 꾸려 나가는 것." },
+        { id: "a10", no: 10, dir: "across", row: 10, col: 5, answer: "인권", hint: "사람이라면 누구나 태어날 때부터 가지는 존중받아야 할 소중한 권리." }
+      ]
+    };
 
-let state={
- elapsedSec:0,
- timerId:null,
- submitted:false,
- activeWordId:null,
- grid:new Map()
-};
+    let state = { elapsedSec: 0, timerId: null, submitted: false, activeWordId: null, grid: new Map() };
+    const wordsById = new Map(PUZZLE.words.map(w => [w.id, w]));
 
-const wordsById=new Map(PUZZLE.words.map(w=>[w.id,w]));
+    function splitChars(text) { return Array.from(text.replace(/\s+/g, "").trim()); }
+    function getWordCells(word) {
+      return splitChars(word.answer).map((char, i) => ({
+        row: word.row + (word.dir === "down" ? i : 0),
+        col: word.col + (word.dir === "across" ? i : 0),
+        char
+      }));
+    }
+    function getInitialConsonants(text) {
+      const CHO = ["ㄱ","ㄲ","ㄴ","ㄷ","ㄸ","ㄹ","ㅁ","ㅂ","ㅃ","ㅅ","ㅆ","ㅇ","ㅈ","ㅉ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ"];
+      return splitChars(text).map(char => {
+        const code = char.charCodeAt(0) - 44032;
+        return (code >= 0 && code <= 11171) ? CHO[Math.floor(code / 588)] : char;
+      }).join("");
+    }
+    function formatTime(sec) {
+      const m = String(Math.floor(sec / 60)).padStart(2, "0");
+      const s = String(sec % 60).padStart(2, "0");
+      return `${m}:${s}`;
+    }
 
-function splitChars(text){
- return Array.from(text.replace(/\s+/g,'').trim());
-}
+    function buildGrid() {
+      for (const word of PUZZLE.words) {
+        getWordCells(word).forEach((cell, i) => {
+          const key = `${cell.row}-${cell.col}`;
+          if (!state.grid.has(key)) state.grid.set(key, { wordIds: [], startNos: [] });
+          const gridCell = state.grid.get(key);
+          if (!gridCell.wordIds.includes(word.id)) gridCell.wordIds.push(word.id);
+          if (i === 0) gridCell.startNos.push(word.no);
+        });
+      }
+    }
 
-function getWordCells(word){
- return splitChars(word.answer).map((char,i)=>({
-   row:word.row+(word.dir==='down'?i:0),
-   col:word.col+(word.dir==='across'?i:0),
-   char
- }));
-}
+    function renderBoard() {
+      const boardEl = document.getElementById("board");
+      boardEl.style.gridTemplateColumns = `repeat(${PUZZLE.size}, 1fr)`;
 
-function getInitialConsonants(text){
- const CHO=["ㄱ","ㄲ","ㄴ","ㄷ","ㄸ","ㄹ","ㅁ","ㅂ","ㅃ","ㅅ","ㅆ","ㅇ","ㅈ","ㅉ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ"];
- return splitChars(text).map(ch=>{
-   const code=ch.charCodeAt(0)-44032;
-   return(code>=0&&code<=11171)?CHO[Math.floor(code/588)]:ch;
- }).join('');
-}
+      for (let r = 0; r < PUZZLE.size; r++) {
+        for (let c = 0; c < PUZZLE.size; c++) {
+          const key = `${r}-${c}`;
+          const cellData = state.grid.get(key);
 
-function formatTime(sec){
- const m=String(Math.floor(sec/60)).padStart(2,'0');
- const s=String(sec%60).padStart(2,'0');
- return `${m}:${s}`;
-}
+          if (!cellData) {
+            const block = document.createElement("div");
+            block.className = "cell block";
+            boardEl.appendChild(block);
+            continue;
+          }
 
-/* 핵심 수정 1 : 진짜 교차 검증 */
-function buildGrid(){
- state.grid.clear();
+          const cell = document.createElement("div");
+          cell.className = "cell";
+          
+          if (cellData.startNos.length > 0) {
+            const num = document.createElement("span");
+            num.className = "cell-number";
+            num.textContent = cellData.startNos[0];
+            cell.appendChild(num);
+          }
 
- for(const word of PUZZLE.words){
-  getWordCells(word).forEach((cell,i)=>{
+          const input = document.createElement("input");
+          input.type = "text"; 
+          input.maxLength = 1; 
+          input.dataset.r = r; 
+          input.dataset.c = c;
+          
+          input.addEventListener("input", (e) => {
+            const val = e.target.value;
+            if (val.length > 0) e.target.value = val.slice(-1); 
+            updateProgress();
+          });
 
-   if(
-      cell.row<0 ||
-      cell.col<0 ||
-      cell.row>=PUZZLE.size ||
-      cell.col>=PUZZLE.size
-   ){
-      console.error(`${word.answer} 퍼즐 범위 초과`);
-      return;
-   }
+          input.addEventListener("keydown", (e) => {
+            if (e.key === "ArrowRight") { e.preventDefault(); moveFocusDir(r, c, 0, 1);
+            } else if (e.key === "ArrowLeft") { e.preventDefault(); moveFocusDir(r, c, 0, -1);
+            } else if (e.key === "ArrowDown") { e.preventDefault(); moveFocusDir(r, c, 1, 0);
+            } else if (e.key === "ArrowUp") { e.preventDefault(); moveFocusDir(r, c, -1, 0); }
+          });
 
-   const key=`${cell.row}-${cell.col}`;
+          input.addEventListener("focus", () => selectWord(cellData.wordIds[0]));
+          
+          cell.appendChild(input);
+          boardEl.appendChild(cell);
+        }
+      }
+    }
 
-   if(!state.grid.has(key)){
-      state.grid.set(key,{
-        char:cell.char,
-        wordIds:[word.id],
-        startNos:i===0?[word.no]:[]
+    function renderClues() {
+      const render = (dir, targetId) => {
+        const target = document.getElementById(targetId);
+        PUZZLE.words.filter(w => w.dir === dir).sort((a,b)=>a.no-b.no).forEach(word => {
+          const card = document.createElement("div");
+          card.className = "clue-card"; card.dataset.id = word.id;
+          card.innerHTML = `
+            <div class="clue-head">
+              <span class="badge ${dir}">${word.no}</span>
+              <div><span class="chip initial">초성 힌트: ${getInitialConsonants(word.answer)}</span></div>
+            </div>
+            <p class="clue-text">${word.hint}</p>
+          `;
+          card.addEventListener("click", () => { selectWord(word.id); focusFirstEmpty(word.id); });
+          target.appendChild(card);
+        });
+      };
+      render("across", "acrossList"); render("down", "downList");
+    }
+
+    function getEl(r, c) { return document.querySelector(`input[data-r="${r}"][data-c="${c}"]`); }
+
+    function moveFocusDir(r, c, dr, dc) {
+      const nextEl = getEl(Number(r) + dr, Number(c) + dc);
+      if (nextEl) nextEl.focus();
+    }
+
+    function selectWord(wordId) {
+      state.activeWordId = wordId;
+      document.querySelectorAll(".clue-card, .cell").forEach(el => el.classList.remove("active"));
+      
+      const card = document.querySelector(`.clue-card[data-id="${wordId}"]`);
+      if (card) {
+        card.classList.add("active");
+        card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+      
+      getWordCells(wordsById.get(wordId)).forEach(c => getEl(c.row, c.col)?.parentElement.classList.add("active"));
+    }
+
+    function focusFirstEmpty(wordId) {
+      const cells = getWordCells(wordsById.get(wordId));
+      for (let c of cells) {
+        const el = getEl(c.row, c.col);
+        if (!el.value) { el.focus(); return; }
+      }
+      getEl(cells[0].row, cells[0].col)?.focus();
+    }
+
+    function updateProgress() {
+      let solved = 0;
+      PUZZLE.words.forEach(w => {
+        const ans = getWordCells(w).map(c => getEl(c.row, c.col)?.value || "").join("");
+        if (ans === w.answer) solved++;
       });
-   }
-   else{
-      const g=state.grid.get(key);
+      document.getElementById("totalCount").textContent = PUZZLE.words.length;
+      document.getElementById("solvedCount").textContent = solved;
+      document.getElementById("progressFill").style.width = `${(solved / PUZZLE.words.length) * 100}%`;
+      return solved;
+    }
 
-      /* 바나나/바람 방식 검증 */
-      if(g.char!==cell.char){
-        console.error(
-          `교차 오류 발생!\n단어:${word.answer}\n좌표:${key}\n기존:${g.char} 새:${cell.char}`
-        );
-      }
+    function startTimer() {
+      state.timerId = setInterval(() => {
+        state.elapsedSec++;
+        document.getElementById("timer").textContent = formatTime(state.elapsedSec);
+      }, 1000);
+    }
 
-      if(!g.wordIds.includes(word.id)){
-         g.wordIds.push(word.id);
-      }
-
-      if(i===0){
-         g.startNos.push(word.no);
-      }
-   }
-
-  });
- }
-}
-
-function renderBoard(){
- const board=document.getElementById('board');
- board.innerHTML='';
- board.style.gridTemplateColumns=`repeat(${PUZZLE.size},1fr)`;
-
- for(let r=0;r<PUZZLE.size;r++){
-  for(let c=0;c<PUZZLE.size;c++){
-
-   const key=`${r}-${c}`;
-   const cellData=state.grid.get(key);
-
-   if(!cellData){
-     const block=document.createElement('div');
-     block.className='cell block';
-     board.appendChild(block);
-     continue;
-   }
-
-   const cell=document.createElement('div');
-   cell.className='cell';
-
-   if(cellData.startNos.length){
-      const num=document.createElement('span');
-      num.className='cell-number';
-      num.textContent=cellData.startNos[0];
-      cell.appendChild(num);
-   }
-
-   const input=document.createElement('input');
-   input.maxLength=1;
-   input.dataset.r=r;
-   input.dataset.c=c;
-
-   input.addEventListener('input',e=>{
-      let v=e.target.value;
-      if(v.length>1) v=v.slice(-1);
-      e.target.value=v;
-      updateProgress();
-   });
-
-   input.addEventListener('focus',()=>{
-      selectWord(cellData.wordIds[0]);
-   });
-
-   input.addEventListener('keydown',(e)=>{
-      if(e.key==='ArrowRight'){e.preventDefault();moveFocusDir(r,c,0,1)}
-      if(e.key==='ArrowLeft'){e.preventDefault();moveFocusDir(r,c,0,-1)}
-      if(e.key==='ArrowDown'){e.preventDefault();moveFocusDir(r,c,1,0)}
-      if(e.key==='ArrowUp'){e.preventDefault();moveFocusDir(r,c,-1,0)}
-   });
-
-   cell.appendChild(input);
-   board.appendChild(cell);
-
-  }
- }
-}
-
-function renderClues(){
- function make(dir,targetId){
-   const target=document.getElementById(targetId);
-   target.innerHTML='';
-
-   PUZZLE.words
-   .filter(w=>w.dir===dir)
-   .sort((a,b)=>a.no-b.no)
-   .forEach(word=>{
-
-    const card=document.createElement('div');
-    card.className='clue-card';
-    card.dataset.id=word.id;
-
-    card.innerHTML=`
-     <div class="clue-head">
-       <span class="badge ${dir}">${word.no}</span>
-       <span class="chip initial">초성 ${getInitialConsonants(word.answer)}</span>
-     </div>
-     <p class="clue-text">${word.hint}</p>
-    `;
-
-    card.addEventListener('click',()=>{
-      selectWord(word.id);
-      focusFirstEmpty(word.id);
+    document.getElementById("submitBtn").addEventListener("click", () => {
+      if (state.submitted) return;
+      clearInterval(state.timerId); state.submitted = true;
+      
+      const resultBox = document.getElementById("resultBox");
+      const solved = updateProgress();
+      
+      document.querySelectorAll("input").forEach(el => el.disabled = true);
+      PUZZLE.words.forEach(w => {
+        const ans = getWordCells(w).map(c => getEl(c.row, c.col)?.value || "").join("");
+        const isCorrect = ans === w.answer;
+        document.querySelector(`.clue-card[data-id="${w.id}"]`).classList.add(isCorrect ? "correct" : "wrong");
+        getWordCells(w).forEach(c => {
+           const cellEl = getEl(c.row, c.col).parentElement;
+           if(!isCorrect) cellEl.classList.add("wrong");
+           else if(!cellEl.classList.contains("wrong")) cellEl.classList.add("correct");
+        });
+      });
+      
+      let message = solved === PUZZLE.words.length ? "최고예요! 전부 맞혔어요! 🎉" : "아쉽지만 잘했어요! 오답을 확인해보세요! 💪";
+      resultBox.innerHTML = `채점 결과: <strong>${solved} / ${PUZZLE.words.length}</strong> 정답<br>소요 시간: <strong>${formatTime(state.elapsedSec)}</strong><br>${message}`;
+      resultBox.style.display = "block";
+      resultBox.scrollIntoView({ behavior: 'smooth' });
     });
 
-    target.appendChild(card);
+    document.getElementById("resetBtn").addEventListener("click", () => {
+      if(confirm("기록을 지우고 처음부터 다시 할까요?")) location.reload();
+    });
 
-   });
- }
-
- make('across','acrossList');
- make('down','downList');
-}
-
-function getEl(r,c){
- return document.querySelector(
- `input[data-r="${r}"][data-c="${c}"]`
- );
-}
-
-function moveFocusDir(r,c,dr,dc){
- const next=getEl(r+dr,c+dc);
- if(next) next.focus();
-}
-
-function selectWord(wordId){
- state.activeWordId=wordId;
-
- document.querySelectorAll('.cell,.clue-card')
- .forEach(el=>el.classList.remove('active'));
-
- const card=document.querySelector(`.clue-card[data-id="${wordId}"]`);
- if(card) card.classList.add('active');
-
- getWordCells(wordsById.get(wordId)).forEach(c=>{
-   const el=getEl(c.row,c.col);
-   if(el) el.parentElement.classList.add('active');
- });
-}
-
-function focusFirstEmpty(wordId){
- const cells=getWordCells(wordsById.get(wordId));
- for(let c of cells){
-  const el=getEl(c.row,c.col);
-  if(el&&!el.value){
-    el.focus();
-    return;
-  }
- }
- getEl(cells[0].row,cells[0].col)?.focus();
-}
-
-function updateProgress(){
- let solved=0;
-
- PUZZLE.words.forEach(w=>{
-  const entered=getWordCells(w)
-  .map(c=>getEl(c.row,c.col)?.value||'')
-  .join('');
-
-  if(entered===w.answer) solved++;
- });
-
- document.getElementById('totalCount').textContent=PUZZLE.words.length;
- document.getElementById('solvedCount').textContent=solved;
- document.getElementById('progressFill').style.width=
- `${solved/PUZZLE.words.length*100}%`;
-
- return solved;
-}
-
-function startTimer(){
- state.timerId=setInterval(()=>{
-  state.elapsedSec++;
-  document.getElementById('timer').textContent=
-   formatTime(state.elapsedSec);
- },1000);
-}
-
-document.getElementById('submitBtn').addEventListener('click',()=>{
- if(state.submitted) return;
-
- state.submitted=true;
- clearInterval(state.timerId);
-
- const solved=updateProgress();
-
- document.querySelectorAll('input').forEach(el=>{
-   el.disabled=true;
- });
-
- PUZZLE.words.forEach(w=>{
-   const entered=getWordCells(w)
-   .map(c=>getEl(c.row,c.col)?.value||'')
-   .join('');
-
-   const ok=entered===w.answer;
-
-   document
-   .querySelector(`.clue-card[data-id="${w.id}"]`)
-   .classList.add(ok?'correct':'wrong');
- });
-
- const box=document.getElementById('resultBox');
- box.style.display='block';
- box.innerHTML=`
- ${solved}/${PUZZLE.words.length} 정답<br>
- 소요시간 ${formatTime(state.elapsedSec)}
- `;
-});
-
-document.getElementById('resetBtn').addEventListener('click',()=>{
- if(confirm('처음부터 다시 할까요?')){
-   location.reload();
- }
-});
-
-buildGrid();
-renderBoard();
-renderClues();
-updateProgress();
-startTimer();
-selectWord('a1');
-
-</script>
+    buildGrid(); renderBoard(); renderClues(); updateProgress(); startTimer();
+    selectWord("a1");
+  </script>
 </body>
 </html>
