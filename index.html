@@ -9,11 +9,8 @@
       --bg1: #fffefe;
       --bg2: #fff7fb;
       --pink: #f04f98;
-      --pink-dark: #e7458c;
-      --pink-light: #ffe7f1;
       --text: #2f3550;
       --muted: #7f8398;
-      --panel: #ffffff;
       --shadow: 0 12px 32px rgba(210, 181, 196, 0.18);
       --cell-size: 48px;
       --cell-gap: 8px;
@@ -27,18 +24,22 @@
       background: linear-gradient(180deg, var(--bg1), var(--bg2));
       color: var(--text);
       min-height: 100vh;
+      overflow-y: hidden; /* 전체 페이지 스크롤 방지 */
     }
 
     .app {
       max-width: 1280px;
       margin: 0 auto;
-      padding: 30px 20px;
+      padding: 24px 20px;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
 
-    .top-header { text-align: center; margin-bottom: 30px; }
+    .top-header { text-align: center; margin-bottom: 24px; flex-shrink: 0; }
     .top-header h1 {
-      margin: 0 0 20px;
-      font-size: clamp(32px, 4vw, 56px);
+      margin: 0 0 16px;
+      font-size: clamp(28px, 4vw, 50px);
       font-weight: 900;
       color: var(--pink);
       letter-spacing: -0.03em;
@@ -53,8 +54,8 @@
     }
 
     .progress-shell {
-      min-width: 300px;
-      max-width: 600px;
+      min-width: 280px;
+      max-width: 500px;
       background: #fff;
       border-radius: 999px;
       padding: 12px 20px;
@@ -67,7 +68,7 @@
 
     .progress-track {
       flex: 1;
-      height: 14px;
+      height: 12px;
       background: #fdeaf2;
       border-radius: 999px;
       overflow: hidden;
@@ -80,23 +81,25 @@
       transition: width 0.3s ease;
     }
 
-    .progress-text { font-weight: 800; color: #5c4450; white-space: nowrap; }
+    .progress-text { font-weight: 800; color: #5c4450; white-space: nowrap; font-size: 15px;}
 
     .timer-pill {
       background: #fff;
-      padding: 12px 24px;
+      padding: 10px 20px;
       border-radius: 999px;
       box-shadow: 0 6px 18px rgba(218, 183, 198, 0.28);
       font-weight: 900;
       color: #5c4450;
-      font-size: 18px;
+      font-size: 17px;
     }
 
+    /* 레이아웃 개선 */
     .layout {
       display: grid;
       grid-template-columns: minmax(0, 1fr) 400px;
       gap: 24px;
-      align-items: start;
+      flex: 1;
+      min-height: 0; /* 스크롤을 위해 필수 */
     }
 
     .panel {
@@ -104,12 +107,12 @@
       border-radius: 24px;
       box-shadow: var(--shadow);
       overflow: hidden;
+      display: flex;
+      flex-direction: column;
     }
 
     .board-panel {
-      padding: 30px;
-      display: flex;
-      flex-direction: column;
+      padding: 24px;
       align-items: center;
     }
 
@@ -118,13 +121,16 @@
       color: var(--muted);
       margin-bottom: 20px;
       text-align: center;
+      line-height: 1.5;
     }
 
     .board-wrap {
       overflow: auto;
       width: 100%;
+      flex: 1;
       display: flex;
       justify-content: center;
+      align-items: flex-start;
       padding: 10px;
     }
 
@@ -180,9 +186,15 @@
       font-size: 20px;
       font-weight: 900;
       text-align: center;
+      flex-shrink: 0;
     }
 
-    .sidebar-body { padding: 20px; }
+    /* 사이드바 스크롤 영역 설정 */
+    .sidebar-body { 
+      padding: 20px; 
+      overflow-y: auto; /* 세로 스크롤 활성화 */
+      flex: 1;
+    }
 
     .section-title { margin: 0 0 12px; font-size: 18px; color: #5b4450; }
     .clue-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
@@ -214,7 +226,7 @@
     
     .clue-text { margin: 0; line-height: 1.5; color: var(--text); font-size: 15px; }
 
-    .actions { display: flex; flex-direction: column; gap: 12px; }
+    .actions { display: flex; flex-direction: column; gap: 12px; margin-top: 10px; }
     .action-btn {
       border: none; border-radius: 14px; padding: 16px;
       font-size: 18px; font-weight: 900; cursor: pointer; color: #fff;
@@ -225,7 +237,11 @@
     .result-box { margin-top: 16px; padding: 16px; font-weight: 800; color: #5b4450; background: #fdf5f8; border-radius: 12px; display: none; line-height: 1.6;}
 
     @media (max-width: 1024px) {
-      .layout { grid-template-columns: 1fr; }
+      body { overflow-y: auto; }
+      .app { height: auto; }
+      .layout { grid-template-columns: 1fr; display: flex; flex-direction: column;}
+      .board-panel { min-height: 500px; }
+      .sidebar { max-height: 800px; }
       :root { --cell-size: 40px; }
     }
   </style>
@@ -245,7 +261,10 @@
 
     <main class="layout">
       <section class="panel board-panel">
-        <div class="board-top-note">힌트를 클릭하면 단어 위치가 표시됩니다. 한 칸에 한 글자씩 입력하세요.</div>
+        <div class="board-top-note">
+          마우스나 <strong>키보드 방향키(⬅️ ⬆️ ⬇️ ➡️)</strong>를 이용해 칸을 이동하며 입력하세요.<br>
+          힌트를 클릭하면 단어 위치가 표시됩니다.
+        </div>
         <div class="board-wrap"><div id="board" class="board"></div></div>
       </section>
 
@@ -269,7 +288,6 @@
   </div>
 
   <script>
-    // --- 1. 퍼즐 데이터 설정 ---
     const PUZZLE = {
       size: 14,
       words: [
@@ -291,11 +309,9 @@
       ]
     };
 
-    // --- 2. 기본 상태 변수 ---
     let state = { elapsedSec: 0, timerId: null, submitted: false, activeWordId: null, grid: new Map() };
     const wordsById = new Map(PUZZLE.words.map(w => [w.id, w]));
 
-    // --- 3. 유틸리티 함수 ---
     function splitChars(text) { return Array.from(text.replace(/\s+/g, "").trim()); }
     function getWordCells(word) {
       return splitChars(word.answer).map((char, i) => ({
@@ -317,7 +333,6 @@
       return `${m}:${s}`;
     }
 
-    // --- 4. 퍼즐 생성 ---
     function buildGrid() {
       for (const word of PUZZLE.words) {
         getWordCells(word).forEach((cell, i) => {
@@ -330,7 +345,6 @@
       }
     }
 
-    // --- 5. 화면 렌더링 ---
     function renderBoard() {
       const boardEl = document.getElementById("board");
       boardEl.style.gridTemplateColumns = `repeat(${PUZZLE.size}, var(--cell-size))`;
@@ -358,26 +372,32 @@
           }
 
           const input = document.createElement("input");
-          input.type = "text"; input.maxLength = 1; input.dataset.r = r; input.dataset.c = c;
+          input.type = "text"; 
+          input.dataset.r = r; 
+          input.dataset.c = c;
           
-          // 한글 조합 버그 해결 이벤트 (조합이 끝났을때만 처리)
-          input.addEventListener("compositionend", (e) => {
-             const char = splitChars(e.target.value).pop() || "";
-             e.target.value = char;
-             if (char) moveFocus(r, c, 1);
-             updateProgress();
-          });
-          
+          // 글자 입력 처리 (마지막 글자만 유지, 자동이동 제거)
           input.addEventListener("input", (e) => {
-            if(e.isComposing) return; // 조합중일때는 패스
-            const char = splitChars(e.target.value).pop() || "";
-            e.target.value = char;
-            if (char) moveFocus(r, c, 1);
+            const val = e.target.value;
+            if (val.length > 0) {
+              e.target.value = val.slice(-1); // 항상 마지막에 친 1글자만 남김
+            }
             updateProgress();
           });
 
+          // 방향키 및 백스페이스 이동 지원
           input.addEventListener("keydown", (e) => {
-            if (e.key === "Backspace" && !e.target.value) moveFocus(r, c, -1);
+            if (e.key === "Backspace" && !e.target.value) {
+              moveFocusInWord(r, c, -1);
+            } else if (e.key === "ArrowRight") {
+              e.preventDefault(); moveFocusDir(r, c, 0, 1);
+            } else if (e.key === "ArrowLeft") {
+              e.preventDefault(); moveFocusDir(r, c, 0, -1);
+            } else if (e.key === "ArrowDown") {
+              e.preventDefault(); moveFocusDir(r, c, 1, 0);
+            } else if (e.key === "ArrowUp") {
+              e.preventDefault(); moveFocusDir(r, c, -1, 0);
+            }
           });
 
           input.addEventListener("focus", () => selectWord(cellData.wordIds[0]));
@@ -408,20 +428,33 @@
       render("across", "acrossList"); render("down", "downList");
     }
 
-    // --- 6. 조작 및 채점 로직 ---
     function getEl(r, c) { return document.querySelector(`input[data-r="${r}"][data-c="${c}"]`); }
     
-    function moveFocus(r, c, step) {
+    // 단어 내에서 백스페이스 시 이동
+    function moveFocusInWord(r, c, step) {
       if (!state.activeWordId) return;
       const cells = getWordCells(wordsById.get(state.activeWordId));
       const idx = cells.findIndex(cell => cell.row === Number(r) && cell.col === Number(c));
-      if (idx !== -1 && cells[idx + step]) getEl(cells[idx + step].row, cells[idx + step].col).focus();
+      if (idx !== -1 && cells[idx + step]) getEl(cells[idx + step].row, cells[idx + step].col)?.focus();
+    }
+
+    // 방향키 절대 이동
+    function moveFocusDir(r, c, dr, dc) {
+      const nextEl = getEl(Number(r) + dr, Number(c) + dc);
+      if (nextEl) nextEl.focus();
     }
 
     function selectWord(wordId) {
       state.activeWordId = wordId;
       document.querySelectorAll(".clue-card, .cell").forEach(el => el.classList.remove("active"));
-      document.querySelector(`.clue-card[data-id="${wordId}"]`)?.classList.add("active");
+      
+      const card = document.querySelector(`.clue-card[data-id="${wordId}"]`);
+      if (card) {
+        card.classList.add("active");
+        // 모바일이나 좁은 화면에서 카드가 보이도록 자동 스크롤
+        card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+      
       getWordCells(wordsById.get(wordId)).forEach(c => getEl(c.row, c.col)?.parentElement.classList.add("active"));
     }
 
@@ -431,7 +464,7 @@
         const el = getEl(c.row, c.col);
         if (!el.value) { el.focus(); return; }
       }
-      getEl(cells[0].row, cells[0].col).focus();
+      getEl(cells[0].row, cells[0].col)?.focus();
     }
 
     function updateProgress() {
@@ -446,7 +479,6 @@
       return solved;
     }
 
-    // --- 7. 타이머 및 버튼 ---
     function startTimer() {
       state.timerId = setInterval(() => {
         state.elapsedSec++;
@@ -468,7 +500,6 @@
         document.querySelector(`.clue-card[data-id="${w.id}"]`).classList.add(isCorrect ? "correct" : "wrong");
         getWordCells(w).forEach(c => {
            const cellEl = getEl(c.row, c.col).parentElement;
-           // 한 칸에 두 단어가 겹칠 경우 오답 우선 표시
            if(!isCorrect) cellEl.classList.add("wrong");
            else if(!cellEl.classList.contains("wrong")) cellEl.classList.add("correct");
         });
@@ -482,7 +513,6 @@
       if(confirm("모든 입력을 초기화하시겠습니까?")) location.reload();
     });
 
-    // --- 8. 시작 ---
     buildGrid(); renderBoard(); renderClues(); updateProgress(); startTimer();
     selectWord("a1");
   </script>
