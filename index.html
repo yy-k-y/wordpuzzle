@@ -20,7 +20,7 @@
       --text-dark: #2D3748;
       --text-light: #718096;
       --shadow: 0 8px 24px rgba(56, 201, 163, 0.15);
-      --cell-gap: 5px; 
+      --cell-gap: 3px; 
     }
 
     * { box-sizing: border-box; }
@@ -87,7 +87,7 @@
       background: #fff;
     }
 
-    /* 퍼즐판 여백 최적화 */
+    /* 1. 퍼즐판 패널: 스크롤 없애고 화면에 꽉 차게 변경! */
     .board-panel { 
       flex: 1; 
       display: flex;
@@ -97,10 +97,11 @@
       background-size: 20px 20px;
       border: 4px solid #fff;
       min-height: 0;
+      padding: 16px;
     }
     
     .board-top-note {
-      font-size: 14px; color: var(--text-dark); margin: 16px auto 0;
+      font-size: 14px; color: var(--text-dark); margin: 0 auto 16px;
       text-align: center; background: rgba(255, 255, 255, 0.95);
       padding: 10px 20px; border-radius: 16px; flex-shrink: 0;
       box-shadow: 0 4px 6px rgba(0,0,0,0.05);
@@ -109,28 +110,28 @@
       max-width: 90%;
     }
 
+    /* 스크롤 없앰! 중앙 정렬 & 최대 크기 제한으로 비율 유지 */
     .board-wrap {
       flex: 1;
-      overflow: auto;
       display: flex;
-      padding: 24px; 
+      justify-content: center;
+      align-items: center; /* 세로 중앙 정렬 */
+      width: 100%;
+      height: 100%;
     }
     
-    .board-wrap::-webkit-scrollbar { width: 12px; height: 12px; }
-    .board-wrap::-webkit-scrollbar-track { background: transparent; }
-    .board-wrap::-webkit-scrollbar-thumb { background: #9AE6B4; border-radius: 10px; border: 2px solid #E6FFFA;}
-
-    /* 13x13 사이즈 및 여유있는 간격 */
     .board { 
       display: grid; 
       width: 100%; 
-      max-width: 600px; 
+      max-width: 500px; /* PC에서도 너무 커지지 않게 제한 */
+      aspect-ratio: 1 / 1; /* 완벽한 정사각형 유지 */
       gap: var(--cell-gap); 
       margin: auto; 
     }
 
     .cell {
       width: 100%;
+      height: 100%;
       aspect-ratio: 1 / 1; 
       border: 2px solid #A0AEC0; 
       border-radius: 6px; 
@@ -141,7 +142,8 @@
     .cell input {
       width: 100%; height: 100%; border: none; outline: none; border-radius: 4px;
       text-align: center; background: transparent; 
-      font-size: clamp(14px, 3.5vw, 24px); 
+      /* 화면이 작아지면 글씨도 알아서 작아지게! */
+      font-size: clamp(12px, 3.5vw, 24px); 
       font-family: 'CookieRun', sans-serif; font-weight: 700; color: #1A202C; padding: 0;
     }
     
@@ -160,7 +162,7 @@
     .cell.wrong input { background: #FFF5F5; color: #E53E3E; }
 
 
-    /* 사이드바 영역 */
+    /* 2. 사이드바 영역 */
     .sidebar { 
       width: 380px; 
       flex-shrink: 0;
@@ -168,7 +170,6 @@
     }
     .sidebar-header { background: var(--main-color); color: #fff; padding: 16px; font-size: 18px; font-weight: 700; text-align: center; flex-shrink: 0;}
     
-    /* 힌트가 가려지지 않도록 하단 패딩 넉넉히! */
     .sidebar-body { 
       padding: 16px 16px 40px 16px; 
       overflow-y: auto; 
@@ -209,10 +210,11 @@
     .reset-btn { background: #A0AEC0; box-shadow: 0 4px 0 #718096; margin-top: 4px;}
     .result-box { margin-top: 12px; padding: 12px; font-weight: 700; color: var(--main-color-dark); background: #E6FFFA; border-radius: 12px; border: 2px dashed var(--main-color); display: none; line-height: 1.5; text-align: center; font-size: 14px;}
 
+    /* 모바일 환경 레이아웃 */
     @media (max-width: 900px) {
       .app { height: auto; min-height: 100vh; padding: 10px; }
       .layout { flex-direction: column; gap: 16px; }
-      .board-wrap { padding: 10px; }
+      .board-panel { padding: 12px; }
       .sidebar { width: 100%; flex: none; }
       .sidebar-body { overflow-y: visible; padding: 16px; }
     }
@@ -232,7 +234,7 @@
     </header>
 
     <main class="layout">
-      <!-- 1. 넓고 쾌적해진 퍼즐판 영역 -->
+      <!-- 1. 스크롤 없이 한눈에 들어오는 퍼즐판! -->
       <section class="panel board-panel">
         <div class="board-top-note">
           한글 오류 방지를 위해 <strong>꼭 한 칸씩 터치해서</strong> 적어주세요!<br>힌트를 누르면 적을 위치를 알려줍니다.
@@ -266,25 +268,27 @@
   </div>
 
   <script>
-    // 🔥 블록 뭉침(2x2) 완벽 해결! 여유롭고 명확한 13x13 십자말풀이 맵
+    // 🔥 단어가 절대 이상하게 겹치지 않도록 완벽하게 재구성한 12x12 맵!
     const PUZZLE = {
-      size: 13, 
+      size: 12, 
       words: [
-        { id: "d1", no: 1, dir: "down", row: 1, col: 3, answer: "수어", hint: "손동작, 표정, 몸짓으로 내 마음을 전달하는 아름다운 언어." },
-        { id: "a2", no: 2, dir: "across", row: 1, col: 7, answer: "저상버스", hint: "계단이 없어 휠체어나 유모차가 쉽게 탈 수 있도록 차체가 낮게 만들어진 버스." },
-        { id: "d3", no: 3, dir: "down", row: 1, col: 8, answer: "상동행동", hint: "몸을 흔들거나 손을 퍼덕이는 등 특별한 목적 없이 같은 동작을 반복하는 특징." },
-        { id: "a4", no: 4, dir: "across", row: 2, col: 1, answer: "배리어프리", hint: "장애인과 비장애인 모두가 불편 없이 이용하도록 장벽을 없애는 개념." },
-        { id: "d4", no: 4, dir: "down", row: 2, col: 1, answer: "배려", hint: "다른 사람을 존중하고 도와주려는 따뜻한 마음." },
-        { id: "a5", no: 5, dir: "across", row: 4, col: 7, answer: "이동권", hint: "우리가 가고 싶은 곳을 안전하고 자유롭게 다닐 수 있는 권리." },
-        { id: "a6", no: 6, dir: "across", row: 5, col: 4, answer: "점자", hint: "시각장애인이 손끝으로 톡톡 읽을 수 있도록 만든 글자." },
-        { id: "d7", no: 7, dir: "down", row: 5, col: 5, answer: "자립", hint: "누군가의 도움을 받더라도 내 삶의 주인으로 스스로 꾸려 나가는 것." },
-        { id: "a8", no: 8, dir: "across", row: 6, col: 6, answer: "발달장애", hint: "지적 장애와 자폐성 장애를 아울러서 부르는 말." },
-        { id: "d9", no: 9, dir: "down", row: 6, col: 8, answer: "장애인", hint: "신체나 정신의 다름으로 인해 일상생활에 어려움을 겪는 사람." },
-        { id: "a10", no: 10, dir: "across", row: 8, col: 1, answer: "보조기기", hint: "장애인의 이동, 의사소통, 학습을 돕는 다양한 장치들." },
-        { id: "a11", no: 11, dir: "across", row: 8, col: 8, answer: "인권", hint: "사람이라면 누구나 태어날 때부터 가지는 존중받아야 할 소중한 권리." },
-        { id: "a12", no: 12, dir: "across", row: 10, col: 2, answer: "쉬운말", hint: "발달장애인이 이해하기 편하도록 어려운 단어를 쉽게 풀어쓴 말." },
-        { id: "a13", no: 13, dir: "across", row: 10, col: 9, answer: "포용", hint: "나와 다르다고 멀리하지 않고, 넓은 마음으로 감싸 안아주는 것." },
-        { id: "a14", no: 14, dir: "across", row: 11, col: 6, answer: "휠체어", hint: "지체장애인이나 뇌병변장애인이 이동할 때 타는 바퀴 달린 의자." }
+        { id: "a1", no: 1, dir: "across", row: 0, col: 1, answer: "저상버스", hint: "계단이 없어 휠체어나 유모차가 쉽게 탈 수 있도록 차체가 낮게 만들어진 버스." },
+        { id: "d2", no: 2, dir: "down", row: 0, col: 2, answer: "상동행동", hint: "몸을 흔들거나 손을 퍼덕이는 등 특별한 목적 없이 같은 동작을 반복하는 특징." },
+        { id: "d3", no: 3, dir: "down", row: 0, col: 8, answer: "수어", hint: "손동작, 표정, 몸짓으로 내 마음을 전달하는 아름다운 언어." },
+        { id: "a4", no: 4, dir: "across", row: 2, col: 5, answer: "배리어프리", hint: "장애인과 비장애인 모두 불편 없이 이용하도록 물리적, 제도적 장벽을 없애는 개념." },
+        { id: "d4", no: 4, dir: "down", row: 2, col: 5, answer: "배려", hint: "다른 사람을 돕고 존중하려는 따뜻한 마음." },
+        { id: "d5", no: 5, dir: "down", row: 2, col: 10, answer: "리프트", hint: "휠체어를 탄 친구가 높은 층을 오르내릴 때 타는 장치." },
+        { id: "a6", no: 6, dir: "across", row: 4, col: 0, answer: "발달장애", hint: "지적 장애와 자폐성 장애를 아울러서 부르는 말." },
+        { id: "d7", no: 7, dir: "down", row: 4, col: 1, answer: "달팽이관", hint: "귀 속에서 소리를 듣는 역할을 하는 기관. 인공 달팽이관 수술을 하기도 해요." },
+        { id: "a8", no: 8, dir: "across", row: 5, col: 7, answer: "이동권", hint: "우리가 가고 싶은 곳을 안전하고 자유롭게 다닐 수 있는 권리." },
+        { id: "a9", no: 9, dir: "across", row: 7, col: 0, answer: "점자", hint: "시각장애인이 손끝으로 톡톡 읽을 수 있도록 만든 글자." },
+        { id: "d10", no: 10, dir: "down", row: 7, col: 1, answer: "자립", hint: "누군가의 도움을 받더라도 내 삶의 주인으로 스스로 꾸려 나가는 것." },
+        { id: "a11", no: 11, dir: "across", row: 7, col: 4, answer: "보조기기", hint: "장애인의 이동, 의사소통, 학습을 돕는 다양한 장치들." },
+        { id: "d12", no: 12, dir: "down", row: 7, col: 8, answer: "공감", hint: "다른 친구의 마음을 내 마음처럼 같이 느끼고 이해해 주는 것." },
+        { id: "a13", no: 13, dir: "across", row: 9, col: 3, answer: "인권", hint: "사람이라면 누구나 태어날 때부터 가지는 존중받아야 할 소중한 권리." },
+        { id: "d13", no: 13, dir: "down", row: 9, col: 3, answer: "인식", hint: "어떤 것을 이해하고 받아들이는 우리의 생각이나 태도." },
+        { id: "a14", no: 14, dir: "across", row: 11, col: 1, answer: "쉬운말", hint: "발달장애인이 이해하기 편하도록 어려운 단어를 쉽게 풀어쓴 말." },
+        { id: "a15", no: 15, dir: "across", row: 11, col: 6, answer: "휠체어", hint: "지체장애인이나 뇌병변장애인이 이동할 때 타는 바퀴 달린 의자." }
       ]
     };
 
@@ -475,7 +479,7 @@
     });
 
     buildGrid(); renderBoard(); renderClues(); updateProgress(); startTimer();
-    selectWord("a2");
+    selectWord("a1");
   </script>
 </body>
 </html>
