@@ -87,7 +87,7 @@
       background: #fff;
     }
 
-    /* 퍼즐판 패널 설정 */
+    /* 퍼즐판 패널 */
     .board-panel { 
       flex: 1; 
       display: flex;
@@ -109,22 +109,22 @@
       max-width: 90%;
     }
 
-    /* 퍼즐판 스크롤 영역 */
     .board-wrap {
       flex: 1;
       overflow: auto;
       display: flex;
-      padding: 20px; /* 잘림 방지 넉넉한 여백 */
+      padding: 20px; 
     }
     
     .board-wrap::-webkit-scrollbar { width: 10px; height: 10px; }
     .board-wrap::-webkit-scrollbar-track { background: transparent; }
     .board-wrap::-webkit-scrollbar-thumb { background: #9AE6B4; border-radius: 10px; border: 2px solid #E6FFFA;}
 
+    /* 11x11 사이즈 최적화 */
     .board { 
       display: grid; 
       width: 100%; 
-      max-width: 500px; /* 사이즈 압축으로 한 화면에 쏙 */
+      max-width: 500px; 
       gap: var(--cell-gap); 
       margin: auto; 
     }
@@ -141,7 +141,7 @@
     .cell input {
       width: 100%; height: 100%; border: none; outline: none; border-radius: 6px;
       text-align: center; background: transparent; 
-      font-size: clamp(16px, 3.5vw, 26px); 
+      font-size: clamp(16px, 4vw, 26px); 
       font-family: 'CookieRun', sans-serif; font-weight: 700; color: #1A202C; padding: 0;
     }
     
@@ -168,12 +168,11 @@
     .sidebar-header { background: var(--main-color); color: #fff; padding: 16px; font-size: 18px; font-weight: 700; text-align: center; flex-shrink: 0;}
     
     .sidebar-body { 
-      padding: 16px 16px 40px 16px; /* 맨 아래 힌트가 안 가려지게 하단 여백 추가 */
+      padding: 16px 16px 40px 16px; 
       overflow-y: auto; 
       flex: 1; 
     }
     
-    /* 스크롤바가 눈에 잘 띄게 수정 */
     .sidebar-body::-webkit-scrollbar { width: 8px; }
     .sidebar-body::-webkit-scrollbar-track { background: #F7FAFC; border-radius: 10px; }
     .sidebar-body::-webkit-scrollbar-thumb { background: #CBD5E0; border-radius: 10px; }
@@ -231,7 +230,7 @@
     </header>
 
     <main class="layout">
-      <!-- 1. 11x11로 최적화된 퍼즐판 영역 -->
+      <!-- 1. 새롭게 조밀해진 퍼즐판 영역 -->
       <section class="panel board-panel">
         <div class="board-top-note">
           한글 오류를 막기 위해 <strong>꼭 한 칸씩 터치해서</strong> 적어주세요!<br>힌트를 누르면 적을 위치를 알려줍니다.
@@ -265,25 +264,25 @@
   </div>
 
   <script>
-    // 🔥 퍼즐 십자 교차 대규모 업데이트! (11x11 사이즈 최적화)
+    // 🔥 완벽하게 맞물리는 11x11 고밀도 크로스워드 데이터
     const PUZZLE = {
-      size: 11, // 사이즈를 줄여서 한 화면에 잘 들어오게 함
+      size: 11, // 14 -> 11로 압축하여 한 화면에 쏙!
       words: [
-        { id: "d7", no: 1, dir: "down", row: 1, col: 5, answer: "이동권", hint: "우리가 가고 싶은 곳을 안전하고 자유롭게 다닐 수 있는 권리." },
-        { id: "a3", no: 2, dir: "across", row: 1, col: 7, answer: "보조기기", hint: "장애인의 이동, 의사소통, 생활을 돕는 편리한 도구들." },
-        { id: "a7", no: 3, dir: "across", row: 2, col: 0, answer: "경사로", hint: "휠체어나 유모차가 계단 대신 쉽게 올라갈 수 있는 비탈길." },
-        { id: "d8", no: 4, dir: "down", row: 2, col: 1, answer: "사회", hint: "나와 다른 모습의 친구들이 모두 모여 함께 살아가는 곳." },
-        { id: "a9", no: 5, dir: "across", row: 3, col: 4, answer: "인권", hint: "사람이라면 누구나 당연히 존중받아야 하는 소중한 권리." },
-        { id: "d9", no: 5, dir: "down", row: 3, col: 4, answer: "인식", hint: "어떤 것을 이해하고 받아들이는 우리의 생각이나 태도." },
-        { id: "d11", no: 7, dir: "down", row: 3, col: 8, answer: "포용", hint: "나와 다르다고 멀리하지 않고, 넓은 마음으로 감싸 안아주는 것." },
-        { id: "d15", no: 8, dir: "down", row: 5, col: 2, answer: "수어", hint: "손동작, 표정, 몸짓으로 내 마음을 전달하는 아름다운 언어." },
-        { id: "a14", no: 9, dir: "across", row: 5, col: 9, answer: "공감", hint: "다른 친구의 마음을 내 마음처럼 같이 느끼고 이해해 주는 것." },
-        { id: "a1", no: 10, dir: "across", row: 6, col: 0, answer: "배리어프리", hint: "모두가 불편 없이 이용할 수 있도록 장벽을 없애려는 개념." },
-        { id: "d1", no: 10, dir: "down", row: 6, col: 0, answer: "배려", hint: "다른 사람을 존중하고 도와주려는 따뜻한 마음." },
-        { id: "d4", no: 12, dir: "down", row: 6, col: 1, answer: "리프트", hint: "휠체어를 탄 친구가 높은 층을 오르내릴 때 타는 장치." },
-        { id: "d13", no: 13, dir: "down", row: 7, col: 10, answer: "존중", hint: "친구가 나와 달라도 그 모습 그대로 소중하게 여겨주는 마음." },
-        { id: "a5", no: 14, dir: "across", row: 8, col: 3, answer: "점자", hint: "시각장애인이 손끝으로 톡톡 읽을 수 있도록 만든 글자." },
-        { id: "d6", no: 15, dir: "down", row: 8, col: 4, answer: "자립", hint: "누군가의 도움을 받더라도 내 삶의 주인으로 스스로 꾸려 나가는 것." }
+        { id: "a1", no: 1, dir: "across", row: 0, col: 2, answer: "보조기기", hint: "장애인의 이동, 의사소통, 생활을 돕는 편리한 도구들." },
+        { id: "a2", no: 2, dir: "across", row: 0, col: 9, answer: "포용", hint: "나와 다르다고 멀리하지 않고, 넓은 마음으로 감싸 안아주는 것." },
+        { id: "a3", no: 3, dir: "across", row: 2, col: 1, answer: "공감", hint: "다른 친구의 마음을 내 마음처럼 같이 느끼고 이해해 주는 것." },
+        { id: "a4", no: 4, dir: "across", row: 2, col: 5, answer: "존중", hint: "친구가 나와 달라도 그 모습 그대로 소중하게 여겨주는 마음." },
+        { id: "a5", no: 5, dir: "across", row: 2, col: 9, answer: "점자", hint: "시각장애인이 손끝으로 톡톡 읽을 수 있도록 만든 글자." },
+        { id: "d6", no: 6, dir: "down", row: 2, col: 10, answer: "자립", hint: "누군가의 도움을 받더라도 내 삶의 주인으로 스스로 꾸려 나가는 것." },
+        { id: "d7", no: 7, dir: "down", row: 3, col: 4, answer: "수어", hint: "손동작, 표정, 몸짓으로 내 마음을 전달하는 아름다운 언어." },
+        { id: "a8", no: 8, dir: "across", row: 4, col: 2, answer: "배리어프리", hint: "장애인과 비장애인 모두가 불편 없이 이용하도록 장벽을 없애는 개념." },
+        { id: "d8", no: 8, dir: "down", row: 4, col: 2, answer: "배려", hint: "다른 사람을 존중하고 도와주려는 따뜻한 마음." },
+        { id: "d9", no: 9, dir: "down", row: 4, col: 6, answer: "리프트", hint: "휠체어를 탄 친구가 높은 층을 오르내릴 때 타는 장치." },
+        { id: "d10", no: 10, dir: "down", row: 7, col: 4, answer: "이동권", hint: "우리가 가고 싶은 곳을 안전하고 자유롭게 다닐 수 있는 권리." },
+        { id: "a11", no: 11, dir: "across", row: 7, col: 7, answer: "경사로", hint: "휠체어나 유모차가 계단 대신 쉽게 올라갈 수 있는 비탈길." },
+        { id: "d12", no: 12, dir: "down", row: 7, col: 8, answer: "사회", hint: "나와 다른 모습의 친구들이 모두 모여 함께 살아가는 곳." },
+        { id: "a13", no: 13, dir: "across", row: 9, col: 3, answer: "인권", hint: "사람이라면 누구나 당연히 존중받아야 하는 소중한 권리." },
+        { id: "d13", no: 13, dir: "down", row: 9, col: 3, answer: "인식", hint: "어떤 것을 이해하고 받아들이는 우리의 생각이나 태도." }
       ]
     };
 
@@ -466,6 +465,7 @@
       let message = solved === PUZZLE.words.length ? "최고예요! 전부 맞혔어요! 🎉" : "아쉽지만 잘했어요! 다시 도전할까요? 💪";
       resultBox.innerHTML = `채점 결과: <strong>${solved} / ${PUZZLE.words.length}</strong> 정답<br>소요 시간: <strong>${formatTime(state.elapsedSec)}</strong><br>${message}`;
       resultBox.style.display = "block";
+      resultBox.scrollIntoView({ behavior: 'smooth' });
     });
 
     document.getElementById("resetBtn").addEventListener("click", () => {
@@ -473,7 +473,7 @@
     });
 
     buildGrid(); renderBoard(); renderClues(); updateProgress(); startTimer();
-    selectWord("d7");
+    selectWord("a1");
   </script>
 </body>
 </html>
