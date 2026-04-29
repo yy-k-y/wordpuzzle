@@ -10,24 +10,20 @@
       --bg-top: #FFFDE4; --bg-bottom: #E4FFEE; --main-color: #38C9A3; --main-color-dark: #2AA383;
       --accent-color: #FFC045; --text-dark: #2D3748; --shadow: 0 4px 15px rgba(56, 201, 163, 0.1); --cell-gap: 1.5px;
     }
-    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
     body { margin: 0; font-family: 'CookieRun', sans-serif; background: linear-gradient(135deg, var(--bg-top), var(--bg-bottom)); color: var(--text-dark); height: 100dvh; display: flex; flex-direction: column; overflow: hidden; }
     
     .app { width: 100%; max-width: 1200px; margin: 0 auto; padding: 10px; height: 100%; display: flex; flex-direction: column; }
-    
     .top-header { text-align: center; flex-shrink: 0; padding-bottom: 5px; }
     .top-header h1 { margin: 2px 0 3px; font-size: clamp(16px, 4vw, 26px); color: var(--main-color-dark); }
-    
     .top-row { display: flex; gap: 8px; justify-content: center; align-items: center; margin-bottom: 2px; }
     .progress-shell { background: #fff; border-radius: 20px; padding: 3px 10px; box-shadow: var(--shadow); display: flex; align-items: center; gap: 8px; flex: 1; max-width: 200px; border: 1px solid #E2E8F0; }
     .progress-track { flex: 1; height: 6px; background: #EDF2F7; border-radius: 999px; overflow: hidden; }
     .progress-fill { width: 0%; height: 100%; background: var(--main-color); transition: width 0.4s ease; }
     .timer-pill { background: #fff; padding: 3px 10px; border-radius: 20px; box-shadow: var(--shadow); font-weight: 700; color: var(--accent-color); border: 1px solid #E2E8F0; font-size: 12px; }
-
     .usage-guide { text-align: center; font-size: 11px; color: #718096; margin-bottom: 5px; font-weight: 700; }
 
     .layout { display: flex; gap: 12px; flex: 1; min-height: 0; }
-    
     .panel { border-radius: 12px; box-shadow: var(--shadow); display: flex; flex-direction: column; overflow: hidden; background: #fff; border: 1px solid #fff; }
     .board-panel { flex: 1.3; background-color: #E6FFFA; padding: 10px; min-height: 0; display: flex; align-items: center; justify-content: center; }
     .board-wrap { width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; }
@@ -37,23 +33,20 @@
     .cell input { width: 100%; height: 100%; border: none; outline: none; text-align: center; background: transparent; font-size: clamp(10px, 2.5vmin, 18px); font-family: 'CookieRun'; font-weight: 700; color: #1A202C; padding: 0; }
     .cell-number { position: absolute; top: 0px; left: 1px; font-size: 7px; font-weight: 700; color: var(--main-color-dark); pointer-events: none; }
     .block { background: #EDF2F7 !important; border: none; opacity: 0.5; }
-    
-    .cell.active-cell { border: 2px solid var(--accent-color); z-index: 5; background: #FFFBEB; }
+    .cell.active-cell { border: 2.5px solid var(--accent-color); z-index: 5; background: #FFFBEB; }
     .cell.highlight { background: #FFFFAF; }
     
     .sidebar { width: 300px; flex-shrink: 0; }
     .sidebar-header { background: var(--main-color); color: #fff; padding: 8px; font-weight: 700; text-align: center; font-size: 15px; }
     .sidebar-body { padding: 10px; overflow-y: auto; flex: 1; scroll-behavior: smooth; }
-    .clue-title { font-size: 13px; font-weight: 700; color: var(--main-color-dark); border-bottom: 2px dashed #E2E8F0; padding-bottom: 4px; margin-bottom: 6px; }
-    
-    .clue-card { border: 1px solid #EDF2F7; border-radius: 6px; padding: 8px; cursor: pointer; background: #fff; margin-bottom: 6px; transition: background 0.3s; }
-    .clue-card.active-clue { border-color: var(--accent-color); background: #FFFFAF; }
-    .clue-header { display: flex; align-items: center; margin-bottom: 4px; gap: 5px; }
-    .badge { padding: 1px 5px; border-radius: 3px; color: #fff; font-size: 9px; font-weight: 700; }
+    .clue-title { font-size: 13px; font-weight: 700; color: var(--main-color-dark); border-bottom: 2px dashed #E2E8F0; padding-bottom: 4px; margin-top: 10px; margin-bottom: 6px; }
+    .clue-card { border: 1px solid #EDF2F7; border-radius: 6px; padding: 8px; cursor: pointer; background: #fff; margin-bottom: 6px; }
+    .clue-card.active-clue { border-color: var(--accent-color); background: #FFFFAF; border-width: 2px; }
+    .badge { padding: 1px 5px; border-radius: 3px; color: #fff; font-size: 9px; font-weight: 700; margin-right: 5px; }
     .badge.across { background: var(--accent-color); }
     .badge.down { background: #63B3ED; }
     .chosung-pill { background: #EDF2F7; color: #4A5568; padding: 1px 6px; border-radius: 8px; font-size: 10px; font-weight: 700; }
-    .clue-desc { font-size: 12px; line-height: 1.3; color: #4A5568; word-break: keep-all; }
+    .clue-desc { font-size: 12px; line-height: 1.3; color: #4A5568; word-break: keep-all; margin-top: 4px; }
     
     .footer-btns { padding: 8px; background: #F7FAFC; border-top: 1px solid #E2E8F0; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
     .action-btn { padding: 10px; border: none; border-radius: 8px; color: #fff; font-family: 'CookieRun'; font-weight: 700; cursor: pointer; font-size: 13px; }
@@ -63,12 +56,10 @@
     @media (max-width: 850px) {
       .app { padding: 5px; }
       .layout { flex-direction: column; overflow: hidden; }
-      .board-panel { flex: none; padding: 5px; height: auto; }
+      .board-panel { flex: none; height: auto; padding: 5px; }
       .board { width: 94vw; height: 94vw; max-width: 380px; max-height: 380px; margin: 0 auto; }
       .sidebar { width: 100%; flex: 1; min-height: 0; }
-      .sidebar-body { padding: 8px; } /* 모바일에서는 1열로 힌트 정렬 */
-      .footer-btns { grid-template-columns: 1fr 1fr; }
-      #submitBtn, #resetBtn { grid-column: span 1; padding: 8px; }
+      #submitBtn, #resetBtn { grid-column: span 1; }
     }
   </style>
 </head>
@@ -84,14 +75,9 @@
         <div class="timer-pill">⏰ <span id="timer">00:00</span></div>
       </div>
     </header>
-
-    <div class="usage-guide">💡 칸을 클릭해 입력하세요! 자동으로 다음 칸으로 넘어갑니다.</div>
-
+    <div class="usage-guide">💡 글자를 입력하면 다음 칸으로 자동 이동합니다!</div>
     <main class="layout">
-      <section class="panel board-panel">
-        <div class="board-wrap"><div id="board" class="board"></div></div>
-      </section>
-
+      <section class="panel board-panel"><div class="board-wrap"><div id="board" class="board"></div></div></section>
       <aside class="panel sidebar">
         <div class="sidebar-header">💡 힌트 리스트</div>
         <div id="sidebarBody" class="sidebar-body">
@@ -131,7 +117,7 @@
       ]
     };
 
-    let state = { elapsedSec: 0, timerId: null, isFinished: false, grid: new Map(), currentWordId: "a1" };
+    let state = { elapsedSec: 0, timerId: null, isFinished: false, grid: new Map(), currentWordId: null, isComposing: false };
 
     function init() {
       state.grid.clear();
@@ -159,7 +145,6 @@
           const data = state.grid.get(`${r}-${c}`);
           const cell = document.createElement("div");
           cell.className = data ? "cell" : "cell block";
-          cell.id = `cell-${r}-${c}`;
           if (data) {
             if (data.startNo) {
               const span = document.createElement("span");
@@ -168,22 +153,38 @@
               cell.appendChild(span);
             }
             const input = document.createElement("input");
-            input.maxLength = 1;
+            input.id = `input-${r}-${c}`;
             input.dataset.r = r; input.dataset.c = c;
             
-            // 클릭 시 강조 및 힌트 자동 스크롤
             input.onfocus = () => {
-              const wordId = data.wordIds[0];
-              state.currentWordId = wordId;
-              highlightWord(wordId);
-              scrollToClue(wordId);
+              const wId = data.wordIds[0];
+              state.currentWordId = wId;
+              highlightWord(wId);
+              scrollToClue(wId);
             };
 
-            // 입력 시 자동 이동
+            // 한글 조합 시작/종료 감지
+            input.addEventListener('compositionstart', () => { state.isComposing = true; });
+            input.addEventListener('compositionend', (e) => { 
+              state.isComposing = false; 
+              // 조합이 끝난 후 글자가 완성되면 이동
+              if (input.value.length >= 1) {
+                setTimeout(() => moveToNext(parseInt(input.dataset.r), parseInt(input.dataset.c)), 50);
+              }
+            });
+
             input.oninput = (e) => {
-              e.target.value = e.target.value.replace(/[^ㄱ-ㅎ가-힣]/g, '');
-              if (e.target.value.length === 1) {
-                moveToNextCell(parseInt(input.dataset.r), parseInt(input.dataset.c));
+              // 한글 외 문자 제거
+              const val = e.target.value.replace(/[^ㄱ-ㅎ가-힣]/g, '');
+              if (val.length > 1) {
+                  e.target.value = val.charAt(val.length - 1);
+              } else {
+                  e.target.value = val;
+              }
+              
+              // 조합 중이 아니고 글자가 있다면 바로 이동 (단일 자음 등)
+              if (!state.isComposing && e.target.value.length >= 1) {
+                  setTimeout(() => moveToNext(parseInt(input.dataset.r), parseInt(input.dataset.c)), 50);
               }
               updateProgress();
             };
@@ -195,54 +196,52 @@
       }
     }
 
-    // 다음 칸으로 자동 포커스 이동
-    function moveToNextCell(r, c) {
+    function moveToNext(r, c) {
+      if (state.isComposing) return; // 조합 중엔 이동 금지
       const word = PUZZLE.words.find(w => w.id === state.currentWordId);
       if (!word) return;
-
       const idx = word.answer.split('').findIndex((_, i) => {
         const currR = word.row + (word.dir === "down" ? i : 0);
         const currC = word.col + (word.dir === "across" ? i : 0);
         return currR === r && currC === c;
       });
-
       if (idx !== -1 && idx < word.answer.length - 1) {
-        const nextR = word.row + (word.dir === "down" ? (idx + 1) : 0);
-        const nextC = word.col + (word.dir === "across" ? (idx + 1) : 0);
-        const nextInput = document.querySelector(`input[data-r="${nextR}"][data-c="${nextC}"]`);
-        if (nextInput) nextInput.focus();
+        const nr = word.row + (word.dir === "down" ? idx + 1 : 0);
+        const nc = word.col + (word.dir === "across" ? idx + 1 : 0);
+        const nextInp = document.getElementById(`input-${nr}-${nc}`);
+        if (nextInp) nextInp.focus();
       }
     }
 
-    // 힌트 카드로 스크롤 이동
     function scrollToClue(wordId) {
-      const clueCard = document.getElementById(`clue-${wordId}`);
-      const sidebarBody = document.getElementById("sidebarBody");
-      if (clueCard && sidebarBody) {
-        const cardTop = clueCard.offsetTop;
-        const bodyTop = sidebarBody.offsetTop;
-        sidebarBody.scrollTo({
-          top: cardTop - bodyTop - 10,
-          behavior: 'smooth'
-        });
+      const card = document.getElementById(`clue-${wordId}`);
+      const body = document.getElementById("sidebarBody");
+      if (card && body) {
+        body.scrollTo({ top: card.offsetTop - body.offsetTop - 10, behavior: 'smooth' });
       }
     }
 
     function renderClues() {
-      document.getElementById("acrossList").innerHTML = "";
-      document.getElementById("downList").innerHTML = "";
+      const aList = document.getElementById("acrossList");
+      const dList = document.getElementById("downList");
+      aList.innerHTML = ""; dList.innerHTML = "";
       PUZZLE.words.forEach(w => {
         const card = document.createElement("div");
         card.className = "clue-card";
         card.id = `clue-${w.id}`;
-        card.innerHTML = `<div class="clue-header"><span class="badge ${w.dir}">${w.no}</span><span class="chosung-pill">${w.chosung}</span></div><div class="clue-desc">${w.hint}</div>`;
+        card.innerHTML = `
+          <div style="display:flex;align-items:center">
+            <span class="badge ${w.dir}">${w.no}</span>
+            <span class="chosung-pill">${w.chosung}</span>
+          </div>
+          <div class="clue-desc">${w.hint}</div>`;
         card.onclick = () => {
           state.currentWordId = w.id;
           highlightWord(w.id);
-          const targetInput = document.querySelector(`input[data-r="${w.row}"][data-c="${w.col}"]`);
-          if(targetInput) targetInput.focus();
+          const inp = document.getElementById(`input-${w.row}-${w.col}`);
+          if(inp) inp.focus();
         };
-        document.getElementById(w.dir === "across" ? "acrossList" : "downList").appendChild(card);
+        (w.dir === "across" ? aList : dList).appendChild(card);
       });
     }
 
@@ -251,17 +250,14 @@
       if(!word) return;
       document.querySelectorAll('.cell').forEach(el => el.classList.remove('active-cell', 'highlight'));
       document.querySelectorAll('.clue-card').forEach(el => el.classList.remove('active-clue'));
-      
-      const activeClue = document.getElementById(`clue-${wordId}`);
-      if(activeClue) activeClue.classList.add('active-clue');
-
+      document.getElementById(`clue-${wordId}`)?.classList.add('active-clue');
       word.answer.split('').forEach((_, i) => {
         const r = word.row + (word.dir === "down" ? i : 0);
         const c = word.col + (word.dir === "across" ? i : 0);
-        const cellEl = document.getElementById(`cell-${r}-${c}`);
-        if(cellEl) {
-          cellEl.classList.add('highlight');
-          if(i === 0) cellEl.classList.add('active-cell');
+        const cell = document.getElementById(`input-${r}-${c}`)?.parentElement;
+        if(cell) {
+          cell.classList.add('highlight');
+          if(i === 0) cell.classList.add('active-cell');
         }
       });
     }
@@ -269,20 +265,18 @@
     function updateProgress() {
       let solved = 0;
       PUZZLE.words.forEach(w => {
-        const userAns = w.answer.split('').map((_, i) => {
+        const user = w.answer.split('').map((_, i) => {
           const r = w.row + (w.dir === "down" ? i : 0);
           const c = w.col + (w.dir === "across" ? i : 0);
-          const input = document.querySelector(`input[data-r="${r}"][data-c="${c}"]`);
-          return input ? input.value : "";
+          return document.getElementById(`input-${r}-${c}`)?.value || "";
         }).join('');
-        if (userAns === w.answer) solved++;
+        if (user === w.answer) solved++;
       });
       document.getElementById("solvedCountText").textContent = `${solved} / ${PUZZLE.words.length}`;
       document.getElementById("progressFill").style.width = `${(solved / PUZZLE.words.length) * 100}%`;
     }
 
     function startTimer() {
-      if(state.timerId) clearInterval(state.timerId);
       state.timerId = setInterval(() => {
         if (!state.isFinished) {
           state.elapsedSec++;
@@ -294,29 +288,24 @@
     }
 
     document.getElementById("submitBtn").onclick = () => {
-      let correctCount = 0;
+      let correct = 0;
       PUZZLE.words.forEach(w => {
-        const userAns = w.answer.split('').map((_, i) => {
+        const user = w.answer.split('').map((_, i) => {
           const r = w.row + (w.dir === "down" ? i : 0);
           const c = w.col + (w.dir === "across" ? i : 0);
-          const input = document.querySelector(`input[data-r="${r}"][data-c="${c}"]`);
-          return input ? input.value : "";
+          return document.getElementById(`input-${r}-${c}`)?.value || "";
         }).join('');
-        if (userAns === w.answer) correctCount++;
+        if (user === w.answer) correct++;
       });
-
-      if (correctCount === PUZZLE.words.length) {
-        state.isFinished = true;
-        clearInterval(state.timerId);
-        const m = Math.floor(state.elapsedSec / 60);
-        const s = state.elapsedSec % 60;
-        alert(`🎉 축하합니다! 모든 문제를 맞히셨습니다!\n⏱ 소요 시간: ${m}분 ${s}초`);
+      if (correct === PUZZLE.words.length) {
+        state.isFinished = true; clearInterval(state.timerId);
+        alert(`🎉 축하합니다! 모든 문제를 맞히셨습니다!\n⏱ 시간: ${Math.floor(state.elapsedSec/60)}분 ${state.elapsedSec%60}초`);
       } else {
-        alert(`🧐 아직 완성되지 않았거나 틀린 부분이 있어요!\n(현재 ${correctCount} / ${PUZZLE.words.length} 정답)`);
+        alert(`🧐 틀린 부분이 있네요! (현재 ${correct}/16개 정답)`);
       }
     };
 
-    document.getElementById("resetBtn").onclick = () => { if(confirm("모든 입력을 지우고 다시 시작할까요?")) location.reload(); };
+    document.getElementById("resetBtn").onclick = () => { if(confirm("다시 시작할까요?")) location.reload(); };
 
     init();
   </script>
