@@ -88,20 +88,20 @@
 
   <script>
     const PUZZLE = {
-      size: 13,
+      size: 13, // 퀴즈판 최적화 사이즈
       words: [
-        { id: "a1", no: 1, dir: "across", row: 2, col: 0, answer: "장애인차별금지법", chosung: "ㅈㅇㅇㅊㅂㄱㅈㅂ", hint: "장애를 이유로 정당한 사유 없이 차별하는 것을 금지하고, 장애인의 권리를 법으로 보장하여 사회 참여를 돕는 법률." },
-        { id: "d2", no: 2, dir: "down", row: 1, col: 1, answer: "지체장애", chosung: "ㅈㅊㅈㅇ", hint: "사고나 질병으로 인해 팔, 다리, 몸통 등 체간의 움직임이 자유롭지 못해 일상생활에 어려움을 겪는 상태." },
-        { id: "a3", no: 3, dir: "across", row: 12, col: 4, answer: "유니버설디자인", chosung: "ㅇㄴㅂㅅㄷㅈㅇ", hint: "연령, 성별, 국적, 장애 유무와 상관없이 '모든 사람'이 처음부터 편리하게 이용할 수 있도록 제품이나 환경을 설계하는 것." },
-        { id: "a4", no: 4, dir: "across", row: 3, col: 1, answer: "배리어프리", chosung: "ㅂㄹㅇㅍㄹ", hint: "고령자나 장애인이 사회 생활을 하는 데 방해가 되는 물리적 장벽(계단, 문턱 등)이나 심리적 벽을 허물자는 운동." },
-        { id: "d5", no: 5, dir: "down", row: 2, col: 2, answer: "물리치료", chosung: "ㅁㄹㅊㄹ", hint: "열, 얼음, 전기, 운동 등을 이용하여 다친 근육이나 관절의 기능을 회복시키고 통증을 완화하는 재활 치료 방법." },
-        { id: "d6", no: 6, dir: "down", row: 0, col: 10, answer: "의사소통", chosung: "ㅇㅅㅅㅌ", hint: "말, 글, 수어, 점자, 표정 등을 통해 서로의 생각이나 느낌, 정보를 주고받는 모든 과정" },
-        { id: "a7", no: 7, dir: "across", row: 0, col: 0, answer: "경사로", chosung: "ㄱㅅㄹ", hint: "휠체어, 유모차, 보행기가 계단 대신 안전하게 이동할 수 있도록 평면과 평면을 완만하게 연결한 비탈길." },
-        { id: "a8", no: 8, dir: "across", row: 10, col: 0, answer: "보조공학", chosung: "ㅂㅈㄱㅎ", hint: "장애로 인해 겪는 신체적 기능을 보완하기 위해 휠체어, 화면 낭독기 등 다양한 기기와 기술을 연구하고 개발하는 분야." },
+        { id: "a1", no: 1, dir: "across", row: 2, col: 0, answer: "장애인차별금지법", chosung: "ㅈㅇㅇㅊㅂㄱㅈㅂ", hint: "장애를 이유로 차별하는 것을 금지하는 법률." },
+        { id: "d2", no: 2, dir: "down", row: 1, col: 1, answer: "지체장애", chosung: "ㅈㅊㅈㅇ", hint: "신체의 기능에 장애가 있는 상태." },
+        { id: "a3", no: 3, dir: "across", row: 12, col: 4, answer: "유니버설디자인", chosung: "ㅇㄴㅂㅅㄷㅈㅇ", hint: "누구나 편리하게 이용하도록 설계하는 것." },
+        { id: "a4", no: 4, dir: "across", row: 3, col: 1, answer: "배리어프리", chosung: "ㅂㄹㅇㅍㄹ", hint: "장애인의 생활에 불편을 주는 장벽을 허무는 운동." },
+        { id: "d5", no: 5, dir: "down", row: 2, col: 2, answer: "물리치료", chosung: "ㅁㄹㅊㄹ", hint: "재활을 위해 신체 기능을 회복시키는 치료." },
+        { id: "d6", no: 6, dir: "down", row: 0, col: 10, answer: "의사소통", chosung: "ㅇㅅㅅㅌ", hint: "생각이나 감정을 주고받는 일. (수어, 점자 등)" },
+        { id: "a7", no: 7, dir: "across", row: 0, col: 0, answer: "경사로", chosung: "ㄱㅅㄹ", hint: "휠체어 등이 계단 대신 이용하는 비탈길." },
+        { id: "a8", no: 8, dir: "across", row: 10, col: 0, answer: "보조공학", chosung: "ㅂㅈㄱㅎ", hint: "장애인의 일상을 돕는 기기와 기술 분야." },
         { id: "d9", no: 9, dir: "down", row: 10, col: 3, answer: "학습권", chosung: "ㅎㅅㄱ", hint: "누구나 교육을 받을 소중한 권리." },
         { id: "d10", no: 10, dir: "down", row: 0, col: 2, answer: "인권", chosung: "ㅇㄱ", hint: "사람이라면 누구나 가지는 기본적인 권리." },
-        { id: "a11", no: 11, dir: "across", row: 0, col: 6, answer: "안내견", chosung: "ㅇㄴㄱ", hint: "시각장애인이 안전하게 길을 걸을 수 있도록 장애물을 피하고 목적지까지 안내하도록 전문적으로 훈련받은 개." },
-        { id: "d12", no: 12, dir: "down", row: 5, col: 7, answer: "지적장애", chosung: "ㅈㅈㅈㅇ", hint: "지적 발달이 천천히 진행되어 학습이나 사회적 적응에 어려움이 있지만, 적절한 교육과 지원을 통해 충분히 자립할 수 있는 상태." },
+        { id: "a11", no: 11, dir: "across", row: 0, col: 6, answer: "안내견", chosung: "ㅇㄴㄱ", hint: "시각장애인의 보행을 돕는 훈련된 개." },
+        { id: "d12", no: 12, dir: "down", row: 5, col: 7, answer: "지적장애", chosung: "ㅈㅈㅈㅇ", hint: "지적 능력이 지체되어 도움이 필요한 장애." },
         { id: "a13", no: 13, dir: "across", row: 7, col: 5, answer: "발달장애", chosung: "ㅂㄷㅈㅇ", hint: "지적장애와 자폐성장애를 통칭하는 말." },
         { id: "d14", no: 14, dir: "down", row: 10, col: 9, answer: "점자", chosung: "ㅈㅈ", hint: "시각장애인이 손끝으로 읽는 볼록한 문자." },
         { id: "a15", no: 15, dir: "across", row: 12, col: 0, answer: "수어", chosung: "ㅅㅇ", hint: "손의 움직임과 표정으로 대화하는 언어." },
