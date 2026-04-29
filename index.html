@@ -4,467 +4,176 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>장애공감 가로세로퀴즈</title>
-  
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/CookieRun-Regular.woff" as="font" type="font/woff" crossorigin>
-  
   <style>
     @font-face { font-family: 'CookieRun'; src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/CookieRun-Regular.woff') format('woff'); font-weight: 400; font-style: normal; }
-    @font-face { font-family: 'CookieRun'; src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/CookieRun-Bold.woff') format('woff'); font-weight: 700; font-style: normal; }
-
     :root {
-      --bg-top: #FFFDE4;
-      --bg-bottom: #E4FFEE;
-      --main-color: #38C9A3;
-      --main-color-dark: #2AA383;
-      --accent-color: #FFC045;
-      --text-dark: #2D3748;
-      --shadow: 0 8px 24px rgba(56, 201, 163, 0.15);
-      --cell-gap: 4px; 
+      --bg-top: #FFFDE4; --bg-bottom: #E4FFEE; --main-color: #38C9A3; --main-color-dark: #2AA383;
+      --accent-color: #FFC045; --text-dark: #2D3748; --shadow: 0 8px 24px rgba(56, 201, 163, 0.15); --cell-gap: 4px;
     }
-
     * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      font-family: 'CookieRun', 'Comic Sans MS', 'Malgun Gothic', sans-serif;
-      background: linear-gradient(135deg, var(--bg-top), var(--bg-bottom));
-      color: var(--text-dark);
-      overflow: hidden; 
-    }
-
-    .app {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 16px;
-      height: 100vh;
-      height: 100dvh;
-      display: flex;
-      flex-direction: column;
-    }
-
+    body { margin: 0; font-family: 'CookieRun', sans-serif; background: linear-gradient(135deg, var(--bg-top), var(--bg-bottom)); color: var(--text-dark); overflow: hidden; }
+    .app { max-width: 1200px; margin: 0 auto; padding: 16px; height: 100dvh; display: flex; flex-direction: column; }
     .top-header { text-align: center; margin-bottom: 12px; flex-shrink: 0; }
-    .top-header h1 {
-      margin: 0 0 12px;
-      font-size: clamp(22px, 4vw, 36px);
-      font-weight: 700;
-      color: var(--main-color-dark);
-      text-shadow: 2px 2px 0px #fff, 4px 4px 0px rgba(56,201,163,0.2);
-    }
-
-    .top-row { display: flex; gap: 10px; justify-content: center; align-items: center; flex-wrap: wrap; }
-
-    .progress-shell {
-      min-width: 200px; background: #fff; border-radius: 30px; padding: 8px 16px;
-      box-shadow: var(--shadow); display: flex; align-items: center; gap: 10px;
-      border: 2px solid #E2E8F0; flex: 1; max-width: 320px;
-    }
-    .progress-track { flex: 1; height: 12px; background: #EDF2F7; border-radius: 999px; overflow: hidden; }
-    .progress-fill { width: 0%; height: 100%; background: linear-gradient(90deg, #6EE7B7, var(--main-color)); border-radius: 999px; transition: width 0.4s ease; }
-    .progress-text { font-weight: 700; color: var(--main-color-dark); white-space: nowrap; font-size: 14px;}
-
-    .timer-pill {
-      background: #fff; padding: 8px 16px; border-radius: 30px;
-      box-shadow: var(--shadow); font-weight: 700; color: var(--accent-color);
-      font-size: 15px; border: 2px solid #E2E8F0;
-    }
-
-    .layout {
-      display: flex;
-      flex-direction: row;
-      gap: 16px;
-      flex: 1;
-      min-height: 0; 
-    }
-
-    .panel {
-      border-radius: 20px;
-      box-shadow: var(--shadow);
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      background: #fff;
-    }
-
-    .board-panel { 
-      flex: 1; 
-      display: flex;
-      flex-direction: column;
-      background-color: #E6FFFA;
-      background-image: linear-gradient(#D1FAE5 1px, transparent 1px), linear-gradient(90deg, #D1FAE5 1px, transparent 1px);
-      background-size: 20px 20px;
-      border: 4px solid #fff;
-      padding: 16px;
-      min-height: 0; 
-    }
-    
-    .board-top-note {
-      font-size: 13px; color: var(--text-dark); margin: 0 auto 12px;
-      text-align: center; background: rgba(255, 255, 255, 0.95);
-      padding: 8px 16px; border-radius: 12px; flex-shrink: 0;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-      border: 2px solid #fff;
-      width: max-content;
-      max-width: 100%;
-    }
-
-    .board-wrap {
-      flex: 1;
-      display: flex;
-      justify-content: center;
-      align-items: center; 
-      width: 100%;
-      height: 100%;
-      overflow: hidden; 
-    }
-    
-    .board { 
-      display: grid; 
-      width: 100%; 
-      height: 100%;
-      max-width: 550px;
-      max-height: 550px;
-      aspect-ratio: 1 / 1; 
-      gap: var(--cell-gap); 
-      margin: auto; 
-    }
-
-    .cell {
-      width: 100%;
-      height: 100%;
-      border: 2px solid #A0AEC0; 
-      border-radius: 6px; 
-      background: #fff; position: relative; transition: all 0.2s;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.05); 
-    }
-    
-    .cell input {
-      width: 100%; height: 100%; border: none; outline: none; border-radius: 4px;
-      text-align: center; background: transparent; 
-      font-size: clamp(12px, 3.2vmin, 24px); 
-      font-family: 'CookieRun', sans-serif; font-weight: 700; color: #1A202C; padding: 0;
-    }
-    
-    .cell-number { 
-      position: absolute; top: 1px; left: 3px; 
-      font-size: clamp(8px, 1vmin, 11px); 
-      font-weight: 700; color: var(--main-color-dark); pointer-events: none; 
-    }
-    
-    .block { visibility: hidden; border: none; box-shadow: none; }
-    
-    .cell.active { border: 2px solid var(--accent-color); box-shadow: 0 4px 10px rgba(255, 192, 69, 0.4); z-index: 10; transform: scale(1.05);}
-    .cell.correct { border: 2px solid var(--main-color); }
+    .top-header h1 { margin: 0 0 12px; font-size: clamp(20px, 4vw, 32px); color: var(--main-color-dark); }
+    .top-row { display: flex; gap: 10px; justify-content: center; align-items: center; }
+    .progress-shell { background: #fff; border-radius: 30px; padding: 8px 16px; box-shadow: var(--shadow); display: flex; align-items: center; gap: 10px; flex: 1; max-width: 300px; }
+    .progress-track { flex: 1; height: 10px; background: #EDF2F7; border-radius: 999px; overflow: hidden; }
+    .progress-fill { width: 0%; height: 100%; background: var(--main-color); transition: width 0.4s ease; }
+    .timer-pill { background: #fff; padding: 8px 16px; border-radius: 30px; box-shadow: var(--shadow); font-weight: 700; color: var(--accent-color); }
+    .layout { display: flex; gap: 16px; flex: 1; min-height: 0; }
+    .panel { border-radius: 20px; box-shadow: var(--shadow); display: flex; flex-direction: column; overflow: hidden; background: #fff; }
+    .board-panel { flex: 1.2; background-color: #E6FFFA; padding: 10px; min-height: 0; }
+    .board-wrap { flex: 1; display: flex; justify-content: center; align-items: center; overflow: hidden; }
+    .board { display: grid; width: 100%; height: 100%; max-width: 600px; max-height: 600px; aspect-ratio: 1 / 1; gap: var(--cell-gap); }
+    .cell { width: 100%; height: 100%; border: 1.5px solid #A0AEC0; border-radius: 4px; background: #fff; position: relative; }
+    .cell input { width: 100%; height: 100%; border: none; outline: none; text-align: center; background: transparent; font-size: clamp(12px, 3vmin, 22px); font-family: 'CookieRun'; font-weight: 700; color: #1A202C; }
+    .cell-number { position: absolute; top: 1px; left: 2px; font-size: 9px; font-weight: 700; color: var(--main-color-dark); }
+    .block { visibility: hidden; }
+    .cell.active { border: 2.5px solid var(--accent-color); z-index: 5; }
     .cell.correct input { background: #D1FAE5; color: var(--main-color-dark); }
-    .cell.wrong { border: 2px solid #FC8181; }
     .cell.wrong input { background: #FFF5F5; color: #E53E3E; }
-
-    .sidebar { 
-      width: 360px; 
-      flex-shrink: 0;
-      border: 2px solid #fff;
-    }
-    .sidebar-header { background: var(--main-color); color: #fff; padding: 14px; font-size: 16px; font-weight: 700; text-align: center; flex-shrink: 0;}
-    
-    .sidebar-body { 
-      padding: 16px 16px 30px 16px; 
-      overflow-y: auto; 
-      flex: 1; 
-    }
-    
-    .sidebar-body::-webkit-scrollbar { width: 6px; }
-    .sidebar-body::-webkit-scrollbar-track { background: #F7FAFC; border-radius: 10px; }
-    .sidebar-body::-webkit-scrollbar-thumb { background: #CBD5E0; border-radius: 10px; }
-    .sidebar-body::-webkit-scrollbar-thumb:hover { background: #A0AEC0; }
-
-    .sidebar-footer {
-      padding: 12px;
-      background: #fff;
-      border-top: 2px dashed #E2E8F0;
-      flex-shrink: 0;
-    }
-
-    .section-title { margin: 0 0 10px; font-size: 15px; color: var(--main-color-dark); padding-bottom: 6px; border-bottom: 2px dashed #E2E8F0;}
-    .clue-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
-    .clue-card { border: 2px solid #EDF2F7; background: #fff; border-radius: 14px; padding: 12px; cursor: pointer; transition: all 0.2s; }
-    .clue-card.active { border-color: var(--accent-color); background: #FFFFAF; box-shadow: 0 4px 10px rgba(255, 192, 69, 0.2); }
-    .clue-card.correct { background: #E6FFFA; border-color: var(--main-color); }
-    .clue-card.wrong { background: #FFF5F5; border-color: #FC8181; }
-
-    .clue-head { display: flex; gap: 8px; align-items: center; margin-bottom: 6px; }
-    .badge { min-width: 24px; height: 24px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 12px; }
+    .sidebar { width: 340px; flex-shrink: 0; }
+    .sidebar-header { background: var(--main-color); color: #fff; padding: 12px; font-weight: 700; text-align: center; }
+    .sidebar-body { padding: 12px; overflow-y: auto; flex: 1; }
+    .clue-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+    .clue-card { border: 1.5px solid #EDF2F7; border-radius: 10px; padding: 10px; cursor: pointer; transition: 0.2s; font-size: 13px; }
+    .clue-card.active { border-color: var(--accent-color); background: #FFFFAF; }
+    .badge { padding: 2px 6px; border-radius: 4px; color: #fff; font-size: 10px; margin-right: 5px; }
     .badge.across { background: var(--accent-color); }
     .badge.down { background: #63B3ED; }
-    .chip { padding: 4px 8px; border-radius: 8px; font-size: 11px; font-weight: 700;}
-    .chip.initial { background: #EBF4FF; color: #4299E1; border: 1px solid #BEE3F8; }
-    .clue-text { margin: 0; line-height: 1.4; color: var(--text-dark); font-size: 13px; word-break: keep-all; }
-
-    .actions { display: flex; flex-direction: column; gap: 6px; }
-    .action-btn { border: none; border-radius: 14px; padding: 12px; font-size: 15px; font-weight: 700; cursor: pointer; color: #fff; font-family: 'CookieRun', sans-serif; transition: transform 0.1s;}
-    .action-btn:active { transform: scale(0.97); }
-    .submit-btn { background: var(--main-color); box-shadow: 0 4px 0 var(--main-color-dark); }
-    .reset-btn { background: #A0AEC0; box-shadow: 0 4px 0 #718096; margin-top: 4px;}
-    .result-box { margin-top: 10px; padding: 10px; font-weight: 700; color: var(--main-color-dark); background: #E6FFFA; border-radius: 10px; border: 2px dashed var(--main-color); display: none; line-height: 1.5; text-align: center; font-size: 13px;}
-
-    @media (max-width: 900px) {
-      .app { padding: 10px; }
-      .layout { flex-direction: column; gap: 12px; }
-      .board-panel { padding: 10px; flex: none; height: 45vh; } 
-      .sidebar { width: 100%; flex: 1; min-height: 0; }
-    }
+    .action-btn { width: 100%; padding: 12px; border: none; border-radius: 10px; color: #fff; font-family: 'CookieRun'; font-weight: 700; cursor: pointer; margin-bottom: 5px; }
+    @media (max-width: 900px) { .layout { flex-direction: column; } .sidebar { width: 100%; height: 40%; } }
   </style>
 </head>
 <body>
   <div class="app">
     <header class="top-header">
-      <h1>⭐ 장애공감 가로세로퀴즈 ⭐</h1>
+      <h1>⭐ 장애공감 낱말퀴즈 (Ver 2.0) ⭐</h1>
       <div class="top-row">
         <div class="progress-shell">
           <div class="progress-track"><div id="progressFill" class="progress-fill"></div></div>
-          <div class="progress-text">성공 <span id="solvedCount">0</span> / <span id="totalCount">0</span></div>
+          <div id="solvedCount" style="font-size:12px; font-weight:700;">0/15</div>
         </div>
         <div class="timer-pill">⏰ <span id="timer">00:00</span></div>
       </div>
     </header>
-
     <main class="layout">
       <section class="panel board-panel">
-        <div class="board-top-note">
-          오류 방지를 위해 <strong>한 칸씩 터치해서</strong> 입력하세요!<br>힌트를 누르면 위치를 알려줍니다.
-        </div>
-        <div class="board-wrap">
-          <div id="board" class="board"></div>
-        </div>
+        <div class="board-wrap"><div id="board" class="board"></div></div>
       </section>
-
       <aside class="panel sidebar">
-        <div class="sidebar-header">💡 지혜의 열쇠 💡</div>
-        
+        <div class="sidebar-header">문제 리스트</div>
         <div class="sidebar-body">
-          <h2 class="section-title">👉 가로</h2>
-          <div id="acrossList" class="clue-list"></div>
-          
-          <h2 class="section-title">👇 세로</h2>
-          <div id="downList" class="clue-list"></div>
+          <div id="acrossList" class="clue-list"><strong>[가로 문제]</strong></div>
+          <div id="downList" class="clue-list"><strong>[세로 문제]</strong></div>
         </div>
-
-        <div class="sidebar-footer">
-          <div class="actions">
-            <button id="submitBtn" class="action-btn submit-btn">다 풀었어요! (제출)</button>
-            <button id="resetBtn" class="action-btn reset-btn">처음부터 다시 할래요</button>
-          </div>
-          <div id="resultBox" class="result-box"></div>
+        <div style="padding:10px;">
+          <button id="submitBtn" class="action-btn" style="background:var(--main-color)">제출하기</button>
+          <div id="resultBox" style="display:none; text-align:center; font-size:12px; padding:10px; background:#f0f0f0; border-radius:10px;"></div>
         </div>
       </aside>
     </main>
   </div>
 
   <script>
-    // 🔥 문제 수와 교육적 밀도를 높인 11개의 단어 완벽 교차 맵 (11x11 사이즈)
     const PUZZLE = {
-      size: 11, 
+      size: 12,
       words: [
-        { id: "a1", no: 1, dir: "across", row: 6, col: 2, answer: "장애인차별금지법", hint: "장애를 이유로 한 부당한 차별을 금지하고 장애인의 권리를 구제하기 위해 제정된 법률." },
-        { id: "d2", no: 2, dir: "down", row: 3, col: 2, answer: "자폐성장애", hint: "다른 사람과 소통하고 관계를 맺는 데 어려움을 겪으며, 특정 행동을 반복하는 발달장애의 한 종류." },
-        { id: "d3", no: 3, dir: "down", row: 0, col: 4, answer: "유니버설디자인", hint: "성별, 나이, 장애 유무와 상관없이 누구나 편리하고 안전하게 이용할 수 있도록 설계하는 디자인." },
-        { id: "a4", no: 4, dir: "across", row: 2, col: 4, answer: "배리어프리", hint: "장애인과 비장애인 모두 불편 없이 이용하도록 물리적, 제도적 장벽을 허무는 운동." },
-        { id: "d5", no: 5, dir: "down", row: 1, col: 8, answer: "물리치료", hint: "신체적 장애나 통증을 완화하고 기능을 회복하기 위해 운동, 열, 전기 등을 이용하는 치료 방법." },
-        { id: "d6", no: 6, dir: "down", row: 6, col: 8, answer: "지체장애", hint: "팔, 다리, 척추 등 신체 일부의 기능을 자유롭게 움직이기 어려워 생활에 불편을 겪는 장애." },
-        { id: "a7", no: 7, dir: "across", row: 8, col: 6, answer: "시각장애인", hint: "눈의 기능이 손상되어 앞을 보지 못하거나 글씨를 읽는 데 큰 어려움을 겪는 사람." },
-        { id: "d8", no: 8, dir: "down", row: 8, col: 10, answer: "인권", hint: "사람이라면 누구나 태어날 때부터 당연히 가지는, 존중받고 차별받지 않을 소중한 권리." },
-        { id: "a9", no: 9, dir: "across", row: 5, col: 0, answer: "다양성", hint: "사람마다 생김새, 생각, 능력, 장애 유무 등이 모두 다르다는 것을 인정하고 존중하는 가치." },
-        { id: "a10", no: 10, dir: "across", row: 3, col: 1, answer: "점자", hint: "시각장애인이 손끝으로 톡톡 읽을 수 있도록 만든 올록볼록한 글자." },
-        { id: "d11", no: 11, dir: "down", row: 1, col: 6, answer: "수어", hint: "청각장애인이 손동작, 표정, 몸짓으로 내 마음을 전달하는 아름다운 시각 언어." }
+        { id: "a1", no: 1, dir: "across", row: 8, col: 1, answer: "장애인차별금지법", hint: "장애를 이유로 정당한 사유 없이 차별하는 것을 금지하는 법률." },
+        { id: "d2", no: 2, dir: "down", row: 6, col: 1, answer: "지체장애", hint: "팔, 다리, 몸통 등 신체의 기능에 장애가 있는 상태." },
+        { id: "d3", no: 3, dir: "down", row: 2, col: 3, answer: "유니버설디자인", hint: "누구나 편리하고 안전하게 이용하도록 제품이나 환경을 설계하는 것." },
+        { id: "a4", no: 4, dir: "across", row: 4, col: 5, answer: "배리어프리", hint: "장애물 없는 생활 환경. 고령자나 장애인의 장벽을 허무는 운동." },
+        { id: "d5", no: 5, dir: "down", row: 3, col: 6, answer: "물리치료", hint: "열, 전기, 운동 등을 통해 신체 기능을 회복시키는 재활 치료." },
+        { id: "d6", no: 6, dir: "down", row: 3, col: 7, answer: "의사소통", hint: "생각이나 감정을 주고받는 일. 수어, 점자 등 다양한 방법이 있음." },
+        { id: "a7", no: 7, dir: "across", row: 1, col: 1, answer: "경사로", hint: "휠체어나 유모차가 계단 대신 오르내릴 수 있는 비탈길." },
+        { id: "a8", no: 8, dir: "across", row: 0, col: 8, answer: "보조공학", hint: "장애인의 일상생활을 돕는 기기와 기술을 연구하는 분야." },
+        { id: "d9", no: 9, dir: "down", row: 0, col: 11, answer: "학습권", hint: "장애 여부와 상관없이 누구나 교육을 받을 권리." },
+        { id: "a10", no: 10, dir: "across", row: 2, col: 10, answer: "인권", hint: "사람이라면 누구나 태어날 때부터 가지는 소중한 권리." },
+        { id: "a11", no: 11, dir: "across", row: 4, col: 10, answer: "존중", hint: "상대방을 소중히 여기고 귀하게 대하는 마음." },
+        { id: "d12", no: 12, dir: "down", row: 8, col: 7, answer: "지적장애", hint: "지적 능력이 지체되어 일상생활에 도움이 필요한 발달장애." },
+        { id: "a13", no: 13, dir: "across", row: 10, col: 5, answer: "발달장애", hint: "지적장애와 자폐성장애를 통칭하는 말." },
+        { id: "d14", no: 14, dir: "down", row: 10, col: 10, answer: "점자", hint: "시각장애인이 손끝으로 읽을 수 있게 만든 볼록한 문자." },
+        { id: "a15", no: 15, dir: "across", row: 11, col: 0, answer: "수어", hint: "청각장애인이 손의 움직임과 표정으로 대화하는 언어." }
       ]
     };
 
-    let state = { elapsedSec: 0, timerId: null, submitted: false, activeWordId: null, grid: new Map() };
-    const wordsById = new Map(PUZZLE.words.map(w => [w.id, w]));
+    let state = { elapsedSec: 0, timerId: null, grid: new Map() };
 
-    function splitChars(text) { return Array.from(text.replace(/\s+/g, "").trim()); }
-    function getWordCells(word) {
-      return splitChars(word.answer).map((char, i) => ({
-        row: word.row + (word.dir === "down" ? i : 0),
-        col: word.col + (word.dir === "across" ? i : 0),
-        char
-      }));
-    }
-    function getInitialConsonants(text) {
-      const CHO = ["ㄱ","ㄲ","ㄴ","ㄷ","ㄸ","ㄹ","ㅁ","ㅂ","ㅃ","ㅅ","ㅆ","ㅇ","ㅈ","ㅉ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ"];
-      return splitChars(text).map(char => {
-        const code = char.charCodeAt(0) - 44032;
-        return (code >= 0 && code <= 11171) ? CHO[Math.floor(code / 588)] : char;
-      }).join("");
-    }
-    function formatTime(sec) {
-      const m = String(Math.floor(sec / 60)).padStart(2, "0");
-      const s = String(sec % 60).padStart(2, "0");
-      return `${m}:${s}`;
-    }
-
-    function buildGrid() {
-      for (const word of PUZZLE.words) {
-        getWordCells(word).forEach((cell, i) => {
-          const key = `${cell.row}-${cell.col}`;
-          if (!state.grid.has(key)) state.grid.set(key, { wordIds: [], startNos: [] });
-          const gridCell = state.grid.get(key);
-          if (!gridCell.wordIds.includes(word.id)) gridCell.wordIds.push(word.id);
-          if (i === 0) gridCell.startNos.push(word.no);
-        });
-      }
-    }
-
-    function renderBoard() {
-      const boardEl = document.getElementById("board");
-      boardEl.style.gridTemplateColumns = `repeat(${PUZZLE.size}, 1fr)`;
-
-      for (let r = 0; r < PUZZLE.size; r++) {
-        for (let c = 0; c < PUZZLE.size; c++) {
+    function init() {
+      for (const w of PUZZLE.words) {
+        w.answer.split('').forEach((char, i) => {
+          const r = w.row + (w.dir === "down" ? i : 0);
+          const c = w.col + (w.dir === "across" ? i : 0);
           const key = `${r}-${c}`;
-          const cellData = state.grid.get(key);
-
-          if (!cellData) {
-            const block = document.createElement("div");
-            block.className = "cell block";
-            boardEl.appendChild(block);
-            continue;
-          }
-
-          const cell = document.createElement("div");
-          cell.className = "cell";
-          
-          if (cellData.startNos.length > 0) {
-            const num = document.createElement("span");
-            num.className = "cell-number";
-            num.textContent = cellData.startNos[0];
-            cell.appendChild(num);
-          }
-
-          const input = document.createElement("input");
-          input.type = "text"; 
-          input.maxLength = 1; 
-          input.dataset.r = r; 
-          input.dataset.c = c;
-          
-          input.addEventListener("input", (e) => {
-            const val = e.target.value;
-            if (val.length > 0) e.target.value = val.slice(-1); 
-            updateProgress();
-          });
-
-          input.addEventListener("keydown", (e) => {
-            if (e.key === "ArrowRight") { e.preventDefault(); moveFocusDir(r, c, 0, 1);
-            } else if (e.key === "ArrowLeft") { e.preventDefault(); moveFocusDir(r, c, 0, -1);
-            } else if (e.key === "ArrowDown") { e.preventDefault(); moveFocusDir(r, c, 1, 0);
-            } else if (e.key === "ArrowUp") { e.preventDefault(); moveFocusDir(r, c, -1, 0); }
-          });
-
-          input.addEventListener("focus", () => selectWord(cellData.wordIds[0]));
-          
-          cell.appendChild(input);
-          boardEl.appendChild(cell);
-        }
-      }
-    }
-
-    function renderClues() {
-      const render = (dir, targetId) => {
-        const target = document.getElementById(targetId);
-        PUZZLE.words.filter(w => w.dir === dir).sort((a,b)=>a.no-b.no).forEach(word => {
-          const card = document.createElement("div");
-          card.className = "clue-card"; card.dataset.id = word.id;
-          card.innerHTML = `
-            <div class="clue-head">
-              <span class="badge ${dir}">${word.no}</span>
-              <div><span class="chip initial">초성 힌트: ${getInitialConsonants(word.answer)}</span></div>
-            </div>
-            <p class="clue-text">${word.hint}</p>
-          `;
-          card.addEventListener("click", () => { selectWord(word.id); focusFirstEmpty(word.id); });
-          target.appendChild(card);
+          if (!state.grid.has(key)) state.grid.set(key, { char, wordIds: [], startNo: null });
+          state.grid.get(key).wordIds.push(w.id);
+          if (i === 0) state.grid.get(key).startNo = w.no;
         });
-      };
-      render("across", "acrossList"); render("down", "downList");
-    }
-
-    function getEl(r, c) { return document.querySelector(`input[data-r="${r}"][data-c="${c}"]`); }
-
-    function moveFocusDir(r, c, dr, dc) {
-      const nextEl = getEl(Number(r) + dr, Number(c) + dc);
-      if (nextEl) nextEl.focus();
-    }
-
-    function selectWord(wordId) {
-      state.activeWordId = wordId;
-      document.querySelectorAll(".clue-card, .cell").forEach(el => el.classList.remove("active"));
-      
-      const card = document.querySelector(`.clue-card[data-id="${wordId}"]`);
-      if (card) {
-        card.classList.add("active");
-        card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       }
-      
-      getWordCells(wordsById.get(wordId)).forEach(c => getEl(c.row, c.col)?.parentElement.classList.add("active"));
-    }
-
-    function focusFirstEmpty(wordId) {
-      const cells = getWordCells(wordsById.get(wordId));
-      for (let c of cells) {
-        const el = getEl(c.row, c.col);
-        if (!el.value) { el.focus(); return; }
-      }
-      getEl(cells[0].row, cells[0].col)?.focus();
-    }
-
-    function updateProgress() {
-      let solved = 0;
-      PUZZLE.words.forEach(w => {
-        const ans = getWordCells(w).map(c => getEl(c.row, c.col)?.value || "").join("");
-        if (ans === w.answer) solved++;
-      });
-      document.getElementById("totalCount").textContent = PUZZLE.words.length;
-      document.getElementById("solvedCount").textContent = solved;
-      document.getElementById("progressFill").style.width = `${(solved / PUZZLE.words.length) * 100}%`;
-      return solved;
-    }
-
-    function startTimer() {
+      render();
       state.timerId = setInterval(() => {
         state.elapsedSec++;
-        document.getElementById("timer").textContent = formatTime(state.elapsedSec);
+        const m = String(Math.floor(state.elapsedSec / 60)).padStart(2, '0');
+        const s = String(state.elapsedSec % 60).padStart(2, '0');
+        document.getElementById("timer").textContent = `${m}:${s}`;
       }, 1000);
     }
 
-    document.getElementById("submitBtn").addEventListener("click", () => {
-      if (state.submitted) return;
-      clearInterval(state.timerId); state.submitted = true;
-      
-      const resultBox = document.getElementById("resultBox");
-      const solved = updateProgress();
-      
-      document.querySelectorAll("input").forEach(el => el.disabled = true);
+    function render() {
+      const board = document.getElementById("board");
+      board.style.gridTemplateColumns = `repeat(${PUZZLE.size}, 1fr)`;
+      for (let r = 0; r < PUZZLE.size; r++) {
+        for (let c = 0; c < PUZZLE.size; c++) {
+          const data = state.grid.get(`${r}-${c}`);
+          const cell = document.createElement("div");
+          cell.className = data ? "cell" : "cell block";
+          if (data) {
+            if (data.startNo) {
+              const span = document.createElement("span");
+              span.className = "cell-number";
+              span.textContent = data.startNo;
+              cell.appendChild(span);
+            }
+            const input = document.createElement("input");
+            input.maxLength = 1;
+            input.dataset.r = r; input.dataset.c = c;
+            input.onfocus = () => {
+              document.querySelectorAll('.cell').forEach(el => el.classList.remove('active'));
+              cell.classList.add('active');
+            };
+            cell.appendChild(input);
+          }
+          board.appendChild(cell);
+        }
+      }
+
       PUZZLE.words.forEach(w => {
-        const ans = getWordCells(w).map(c => getEl(c.row, c.col)?.value || "").join("");
-        const isCorrect = ans === w.answer;
-        document.querySelector(`.clue-card[data-id="${w.id}"]`).classList.add(isCorrect ? "correct" : "wrong");
-        getWordCells(w).forEach(c => {
-           const cellEl = getEl(c.row, c.col).parentElement;
-           if(!isCorrect) cellEl.classList.add("wrong");
-           else if(!cellEl.classList.contains("wrong")) cellEl.classList.add("correct");
-        });
+        const card = document.createElement("div");
+        card.className = "clue-card";
+        card.innerHTML = `<span class="badge ${w.dir}">${w.no}</span> ${w.hint}`;
+        card.onclick = () => document.querySelector(`input[data-r="${w.row}"][data-c="${w.col}"]`).focus();
+        document.getElementById(w.dir === "across" ? "acrossList" : "downList").appendChild(card);
       });
-      
-      let message = solved === PUZZLE.words.length ? "최고예요! 전부 맞혔어요! 🎉" : "아쉽지만 잘했어요! 오답을 확인해보세요! 💪";
-      resultBox.innerHTML = `채점 결과: <strong>${solved} / ${PUZZLE.words.length}</strong> 정답<br>소요 시간: <strong>${formatTime(state.elapsedSec)}</strong><br>${message}`;
-      resultBox.style.display = "block";
-      resultBox.scrollIntoView({ behavior: 'smooth' });
-    });
+    }
 
-    document.getElementById("resetBtn").addEventListener("click", () => {
-      if(confirm("기록을 지우고 처음부터 다시 할까요?")) location.reload();
-    });
+    document.getElementById("submitBtn").onclick = () => {
+      let correct = 0;
+      PUZZLE.words.forEach(w => {
+        const userAns = w.answer.split('').map((_, i) => {
+          const r = w.row + (w.dir === "down" ? i : 0);
+          const c = w.col + (w.dir === "across" ? i : 0);
+          return document.querySelector(`input[data-r="${r}"][data-c="${c}"]`).value;
+        }).join('');
+        if (userAns === w.answer) correct++;
+      });
+      const res = document.getElementById("resultBox");
+      res.style.display = "block";
+      res.innerHTML = `결과: ${correct} / ${PUZZLE.words.length} 정답!<br>수고하셨습니다!`;
+      document.getElementById("solvedCount").textContent = `${correct}/15`;
+      document.getElementById("progressFill").style.width = `${(correct/15)*100}%`;
+    };
 
-    buildGrid(); renderBoard(); renderClues(); updateProgress(); startTimer();
-    selectWord("a1");
+    init();
   </script>
 </body>
 </html>
