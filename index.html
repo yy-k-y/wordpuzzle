@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>장애공감 낱말퀴즈</title>
+  <title>장애공감 가로세로퀴즈</title>
   <style>
     @font-face { font-family: 'CookieRun'; src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/CookieRun-Regular.woff') format('woff'); font-weight: 400; font-style: normal; }
     :root {
@@ -15,7 +15,6 @@
     
     .app { width: 100%; max-width: 1200px; margin: 0 auto; padding: 10px; height: 100%; display: flex; flex-direction: column; }
     
-    /* 헤더 영역 - 높이 최소화 */
     .top-header { text-align: center; flex-shrink: 0; padding-bottom: 5px; }
     .top-header h1 { margin: 2px 0 3px; font-size: clamp(16px, 4vw, 26px); color: var(--main-color-dark); }
     
@@ -25,7 +24,6 @@
     .progress-fill { width: 0%; height: 100%; background: var(--main-color); transition: width 0.4s ease; }
     .timer-pill { background: #fff; padding: 3px 10px; border-radius: 20px; box-shadow: var(--shadow); font-weight: 700; color: var(--accent-color); border: 1px solid #E2E8F0; font-size: 12px; }
 
-    /* 조작 안내 문구 */
     .usage-guide { text-align: center; font-size: 11px; color: #718096; margin-bottom: 5px; font-weight: 700; }
 
     .layout { display: flex; gap: 12px; flex: 1; min-height: 0; }
@@ -43,7 +41,6 @@
     .cell.active-cell { border: 2px solid var(--accent-color); z-index: 5; background: #FFFBEB; }
     .cell.highlight { background: #FFFFAF; }
     
-    /* 힌트 영역 */
     .sidebar { width: 300px; flex-shrink: 0; }
     .sidebar-header { background: var(--main-color); color: #fff; padding: 8px; font-weight: 700; text-align: center; font-size: 15px; }
     .sidebar-body { padding: 10px; overflow-y: auto; flex: 1; }
@@ -63,18 +60,11 @@
     #submitBtn { background: var(--main-color); grid-column: span 2; }
     #resetBtn { background: #A0AEC0; grid-column: span 2; }
 
-    /* 모바일 강제 자동 축소 및 안내문구 유지 */
     @media (max-width: 850px) {
       .app { padding: 5px; }
       .layout { flex-direction: column; overflow: hidden; }
       .board-panel { flex: none; padding: 5px; height: auto; }
-      .board { 
-        width: 94vw; 
-        height: 94vw; 
-        max-width: 380px; 
-        max-height: 380px; 
-        margin: 0 auto; 
-      }
+      .board { width: 94vw; height: 94vw; max-width: 380px; max-height: 380px; margin: 0 auto; }
       .sidebar { width: 100%; flex: 1; min-height: 0; }
       .sidebar-body { display: flex; flex-direction: row; gap: 8px; padding: 8px; }
       .sidebar-body > div { flex: 1; min-width: 0; }
@@ -96,7 +86,7 @@
       </div>
     </header>
 
-    <div class="usage-guide">💡 각 칸을 클릭해 한 글자씩 입력하거나, Tab키로 이동할 수 있어요!</div>
+    <div class="usage-guide">💡 칸을 클릭해 입력하세요! Tab키로 이동 가능해요.</div>
 
     <main class="layout">
       <section class="panel board-panel">
@@ -124,7 +114,6 @@
   </div>
 
   <script>
-    // [PUZZLE 데이터 및 스크립트 로직 유지]
     const PUZZLE = {
       size: 15,
       words: [
@@ -147,7 +136,7 @@
       ]
     };
 
-    let state = { elapsedSec: 0, timerId: null, grid: new Map() };
+    let state = { elapsedSec: 0, timerId: null, isFinished: false, grid: new Map() };
 
     function init() {
       state.grid.clear();
@@ -251,27 +240,39 @@
     function startTimer() {
       if(state.timerId) clearInterval(state.timerId);
       state.timerId = setInterval(() => {
-        state.elapsedSec++;
-        const m = String(Math.floor(state.elapsedSec / 60)).padStart(2, '0');
-        const s = String(state.elapsedSec % 60).padStart(2, '0');
-        document.getElementById("timer").textContent = `${m}:${s}`;
+        if (!state.isFinished) {
+          state.elapsedSec++;
+          const m = String(Math.floor(state.elapsedSec / 60)).padStart(2, '0');
+          const s = String(state.elapsedSec % 60).padStart(2, '0');
+          document.getElementById("timer").textContent = `${m}:${s}`;
+        }
       }, 1000);
     }
 
     document.getElementById("submitBtn").onclick = () => {
-      let correct = 0;
+      let correctCount = 0;
       PUZZLE.words.forEach(w => {
         const userAns = w.answer.split('').map((_, i) => {
           const r = w.row + (w.dir === "down" ? i : 0);
           const c = w.col + (w.dir === "across" ? i : 0);
-          return document.querySelector(`input[data-r="${r}"][data-c="${c}"]`).value;
+          const input = document.querySelector(`input[data-r="${r}"][data-c="${c}"]`);
+          return input ? input.value : "";
         }).join('');
-        if (userAns === w.answer) correct++;
+        if (userAns === w.answer) correctCount++;
       });
-      alert(`🏁 결과: ${correct} / ${PUZZLE.words.length} 정답입니다!`);
+
+      if (correctCount === PUZZLE.words.length) {
+        state.isFinished = true;
+        clearInterval(state.timerId);
+        const m = Math.floor(state.elapsedSec / 60);
+        const s = state.elapsedSec % 60;
+        alert(`🎉 축하합니다! 모든 문제를 맞히셨습니다!\n⏱ 소요 시간: ${m}분 ${s}초`);
+      } else {
+        alert(`🧐 아직 완성되지 않았거나 틀린 부분이 있어요!\n(현재 ${correctCount} / ${PUZZLE.words.length} 정답)`);
+      }
     };
 
-    document.getElementById("resetBtn").onclick = () => { if(confirm("다시 풀까요?")) location.reload(); };
+    document.getElementById("resetBtn").onclick = () => { if(confirm("모든 입력을 지우고 다시 시작할까요?")) location.reload(); };
 
     init();
   </script>
