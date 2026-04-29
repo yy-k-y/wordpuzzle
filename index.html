@@ -10,7 +10,7 @@
       --bg-top: #FFFDE4; --bg-bottom: #E4FFEE; --main-color: #38C9A3; --main-color-dark: #2AA383;
       --accent-color: #FFC045; --text-dark: #2D3748; --shadow: 0 4px 15px rgba(56, 201, 163, 0.1); --cell-gap: 1.5px;
     }
-    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     body { margin: 0; font-family: 'CookieRun', sans-serif; background: linear-gradient(135deg, var(--bg-top), var(--bg-bottom)); color: var(--text-dark); height: 100dvh; display: flex; flex-direction: column; overflow: hidden; }
     
     .app { width: 100%; max-width: 1200px; margin: 0 auto; padding: 10px; height: 100%; display: flex; flex-direction: column; }
@@ -21,7 +21,9 @@
     .progress-track { flex: 1; height: 6px; background: #EDF2F7; border-radius: 999px; overflow: hidden; }
     .progress-fill { width: 0%; height: 100%; background: var(--main-color); transition: width 0.4s ease; }
     .timer-pill { background: #fff; padding: 3px 10px; border-radius: 20px; box-shadow: var(--shadow); font-weight: 700; color: var(--accent-color); border: 1px solid #E2E8F0; font-size: 12px; }
-    .usage-guide { text-align: center; font-size: 11px; color: #718096; margin-bottom: 5px; font-weight: 700; }
+    
+    /* 조작 안내 강조 */
+    .usage-guide { text-align: center; font-size: 11px; color: #4A5568; margin-bottom: 5px; padding: 4px; background: rgba(255,255,255,0.5); border-radius: 8px; line-height: 1.4; }
 
     .layout { display: flex; gap: 12px; flex: 1; min-height: 0; }
     .panel { border-radius: 12px; box-shadow: var(--shadow); display: flex; flex-direction: column; overflow: hidden; background: #fff; border: 1px solid #fff; }
@@ -75,7 +77,10 @@
         <div class="timer-pill">⏰ <span id="timer">00:00</span></div>
       </div>
     </header>
-    <div class="usage-guide">💡 글자를 입력하면 다음 칸으로 자동 이동합니다!</div>
+    <div class="usage-guide">
+        🖱️ 칸을 클릭해 입력하세요! <br>
+        ⌨️ <b>방향키</b>나 <b>Tab</b>키로 옆 칸으로 이동할 수 있습니다.
+    </div>
     <main class="layout">
       <section class="panel board-panel"><div class="board-wrap"><div id="board" class="board"></div></div></section>
       <aside class="panel sidebar">
@@ -117,7 +122,7 @@
       ]
     };
 
-    let state = { elapsedSec: 0, timerId: null, isFinished: false, grid: new Map(), currentWordId: null, isComposing: false };
+    let state = { elapsedSec: 0, timerId: null, isFinished: false, grid: new Map(), currentWordId: null };
 
     function init() {
       state.grid.clear();
@@ -154,6 +159,7 @@
             }
             const input = document.createElement("input");
             input.id = `input-${r}-${c}`;
+            input.maxLength = 1;
             input.dataset.r = r; input.dataset.c = c;
             
             input.onfocus = () => {
@@ -163,30 +169,22 @@
               scrollToClue(wId);
             };
 
-            // 한글 조합 시작/종료 감지
-            input.addEventListener('compositionstart', () => { state.isComposing = true; });
-            input.addEventListener('compositionend', (e) => { 
-              state.isComposing = false; 
-              // 조합이 끝난 후 글자가 완성되면 이동
-              if (input.value.length >= 1) {
-                setTimeout(() => moveToNext(parseInt(input.dataset.r), parseInt(input.dataset.c)), 50);
-              }
-            });
-
             input.oninput = (e) => {
-              // 한글 외 문자 제거
-              const val = e.target.value.replace(/[^ㄱ-ㅎ가-힣]/g, '');
-              if (val.length > 1) {
-                  e.target.value = val.charAt(val.length - 1);
-              } else {
-                  e.target.value = val;
-              }
-              
-              // 조합 중이 아니고 글자가 있다면 바로 이동 (단일 자음 등)
-              if (!state.isComposing && e.target.value.length >= 1) {
-                  setTimeout(() => moveToNext(parseInt(input.dataset.r), parseInt(input.dataset.c)), 50);
-              }
+              e.target.value = e.target.value.replace(/[^ㄱ-ㅎ가-힣]/g, '');
               updateProgress();
+            };
+
+            // 방향키 및 키보드 이동 로직
+            input.onkeydown = (e) => {
+              const r = parseInt(input.dataset.r);
+              const c = parseInt(input.dataset.c);
+              switch(e.key) {
+                case "ArrowRight": moveFocus(r, c + 1); break;
+                case "ArrowLeft":  moveFocus(r, c - 1); break;
+                case "ArrowUp":    moveFocus(r - 1, c); break;
+                case "ArrowDown":  moveFocus(r + 1, c); break;
+                case "Enter":      moveFocus(r, c + 1); break;
+              }
             };
 
             cell.appendChild(input);
@@ -196,21 +194,9 @@
       }
     }
 
-    function moveToNext(r, c) {
-      if (state.isComposing) return; // 조합 중엔 이동 금지
-      const word = PUZZLE.words.find(w => w.id === state.currentWordId);
-      if (!word) return;
-      const idx = word.answer.split('').findIndex((_, i) => {
-        const currR = word.row + (word.dir === "down" ? i : 0);
-        const currC = word.col + (word.dir === "across" ? i : 0);
-        return currR === r && currC === c;
-      });
-      if (idx !== -1 && idx < word.answer.length - 1) {
-        const nr = word.row + (word.dir === "down" ? idx + 1 : 0);
-        const nc = word.col + (word.dir === "across" ? idx + 1 : 0);
-        const nextInp = document.getElementById(`input-${nr}-${nc}`);
-        if (nextInp) nextInp.focus();
-      }
+    function moveFocus(r, c) {
+      const nextInp = document.getElementById(`input-${r}-${c}`);
+      if (nextInp) nextInp.focus();
     }
 
     function scrollToClue(wordId) {
