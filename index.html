@@ -8,71 +8,62 @@
     @font-face { font-family: 'CookieRun'; src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/CookieRun-Regular.woff') format('woff'); font-weight: 400; font-style: normal; }
     :root {
       --bg-color: #F0FDF4; --board-bg: #E6FFFA; --main-color: #38C9A3; 
-      --main-dark: #2AA383; --accent: #FFC045; --text: #2D3748; --cell-gap: 3px;
+      --main-dark: #2AA383; --accent: #FFC045; --text: #2D3748;
     }
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     body { margin: 0; font-family: 'CookieRun', sans-serif; background-color: var(--bg-color); color: var(--text); height: 100dvh; display: flex; flex-direction: column; overflow: hidden; }
     
     .app { flex: 1; display: flex; flex-direction: column; width: 100%; max-width: 1100px; margin: 0 auto; padding: 15px; min-height: 0; }
     
-    /* 상단 헤더 및 타이틀 */
+    /* 상단 영역 */
     .header { text-align: center; margin-bottom: 10px; flex-shrink: 0; }
     .header h1 { margin: 0 0 10px 0; font-size: 1.8rem; color: var(--main-dark); }
-    .top-stats { display: flex; gap: 15px; justify-content: center; align-items: center; margin-bottom: 15px; }
+    .top-stats { display: flex; gap: 15px; justify-content: center; align-items: center; margin-bottom: 10px; }
     .progress-wrap { background: #fff; border-radius: 20px; padding: 5px 15px; display: flex; align-items: center; gap: 10px; width: 280px; border: 2px solid #D1FAE5; }
     .progress-track { flex: 1; height: 10px; background: #ECFDF5; border-radius: 10px; overflow: hidden; }
     .progress-fill { width: 0%; height: 100%; background: var(--main-color); transition: width 0.3s; }
-    .timer-box { background: #fff; padding: 5px 15px; border-radius: 20px; font-weight: 700; border: 2px solid #FFE4E6; color: #F43F5E; font-size: 0.9rem; }
+    .timer-box { background: #fff; padding: 5px 15px; border-radius: 20px; font-weight: 700; border: 2px solid #FFE4E6; color: #F43F5E; }
 
-    /* 안내 메시지 바 */
-    .info-bar { background: #fff; border: 2px dashed var(--main-color); border-radius: 10px; padding: 8px; text-align: center; font-size: 0.85rem; color: var(--main-dark); margin-bottom: 15px; flex-shrink: 0; }
+    .info-bar { background: #fff; border: 2px dashed var(--main-color); border-radius: 10px; padding: 8px; text-align: center; font-size: 0.85rem; color: var(--main-dark); margin-bottom: 15px; }
 
-    /* 메인 레이아웃 (PC: 가로, 모바일: 세로) */
+    /* 메인 컨텐츠 레이아웃 */
     .main-content { display: flex; flex-direction: row; gap: 20px; flex: 1; min-height: 0; }
     
-    /* 왼쪽 퀴즈판 */
-    .board-area { flex: 1.6; background: var(--board-bg); border-radius: 20px; padding: 15px; display: flex; align-items: center; justify-content: center; border: 2px solid #B2DFDB; overflow: hidden; }
-    .board { display: grid; gap: var(--cell-gap); width: 100%; max-width: 520px; aspect-ratio: 1/1; }
+    .board-area { flex: 1.6; background: var(--board-bg); border-radius: 20px; padding: 20px; display: flex; align-items: center; justify-content: center; border: 2px solid #B2DFDB; overflow: hidden; }
+    .board { display: grid; gap: 3px; width: 100%; max-width: 500px; aspect-ratio: 1/1; }
     
-    .cell { background: #fff; border-radius: 4px; position: relative; border: 1px solid #B2DFDB; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-    .cell input { width: 100%; height: 100%; border: none; outline: none; text-align: center; font-size: 1.1rem; font-family: 'CookieRun'; font-weight: 700; color: var(--main-dark); background: transparent; padding-top: 5px; }
+    .cell { background: #fff; border-radius: 4px; position: relative; border: 1px solid #B2DFDB; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+    .cell input { width: 100%; height: 100%; border: none; outline: none; text-align: center; font-size: 1.1rem; font-family: 'CookieRun'; font-weight: 700; color: var(--main-dark); background: transparent; padding-top: 4px; }
     .cell-num { position: absolute; top: 1px; left: 2px; font-size: 0.65rem; color: var(--main-dark); font-weight: 700; z-index: 2; }
     .block { visibility: hidden; }
     .cell.active { border: 3px solid var(--accent); background: #FFFBEB; z-index: 5; }
     .cell.highlight { background: #E0F2F1; }
 
-    /* 오른쪽 사이드바 */
-    .sidebar { flex: 0.8; display: flex; flex-direction: column; gap: 15px; min-width: 300px; }
+    /* 사이드바 */
+    .sidebar { flex: 0.9; display: flex; flex-direction: column; gap: 10px; min-width: 320px; }
     .clue-box { flex: 1; background: #fff; border-radius: 15px; border: 2px solid #D1FAE5; display: flex; flex-direction: column; overflow: hidden; }
-    .clue-header { background: var(--main-color); color: #fff; padding: 10px; text-align: center; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 5px; }
+    .clue-header { background: var(--main-color); color: #fff; padding: 10px; text-align: center; font-weight: 700; }
     .clue-scroll { flex: 1; overflow-y: auto; padding: 12px; }
     
-    .clue-card { border: 1px solid #F3F4F6; border-radius: 10px; padding: 10px; margin-bottom: 8px; cursor: pointer; transition: 0.2s; }
-    .clue-card.active { border-color: var(--accent); background: #FFFBEB; }
+    .clue-card { border: 1px solid #F3F4F6; border-radius: 10px; padding: 10px; margin-bottom: 8px; cursor: pointer; border-left: 5px solid #E5E7EB; }
+    .clue-card.active { border-color: var(--accent); background: #FFFBEB; border-left-color: var(--accent); }
     .clue-title { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
     .badge { padding: 2px 6px; border-radius: 4px; color: #fff; font-size: 0.7rem; font-weight: 700; }
     .badge.across { background: var(--accent); }
     .badge.down { background: #60A5FA; }
-    .chosung { color: var(--main-dark); font-size: 0.75rem; letter-spacing: 1px; font-weight: 700; }
+    .chosung { color: var(--main-dark); font-size: 0.75rem; font-weight: 700; letter-spacing: 1px; }
     .clue-text { font-size: 0.85rem; line-height: 1.4; color: #4B5563; word-break: keep-all; }
 
-    /* 하단 버튼 및 결과창 */
-    .sidebar-footer { flex-shrink: 0; display: flex; flex-direction: column; gap: 10px; }
     .btn { width: 100%; padding: 12px; border: none; border-radius: 10px; font-family: 'CookieRun'; font-weight: 700; cursor: pointer; font-size: 0.95rem; }
     .btn-submit { background: var(--main-color); color: white; }
     .btn-reset { background: #94A3B8; color: white; }
-    .result-box { background: #fff; border: 2px dashed var(--main-color); border-radius: 10px; padding: 10px; text-align: center; font-size: 0.85rem; line-height: 1.5; }
 
-    /* 📱 모바일 대응 */
+    /* 모바일 반응형 */
     @media (max-width: 850px) {
-      .main-content { flex-direction: column; }
+      .main-content { flex-direction: column; overflow-y: auto; }
       .board-area { flex: none; height: 45dvh; padding: 10px; }
-      .sidebar { flex: 1; min-width: 0; }
-      .app { padding: 10px; }
-      .header h1 { font-size: 1.4rem; }
-      .top-stats { margin-bottom: 10px; }
-      .progress-wrap { width: 100%; }
-      .info-bar { font-size: 0.75rem; }
+      .sidebar { flex: none; min-width: 0; }
+      body { overflow: auto; }
     }
   </style>
 </head>
@@ -89,166 +80,132 @@
       </div>
     </header>
 
-    <div class="info-bar">
-      💡 Tab 키로 이동하거나 칸을 클릭해 입력하세요! [초기화]로 다시 풀 수 있어요.
-    </div>
+    <div class="info-bar">💡 Tab 키로 이동하거나 칸을 클릭해 입력하세요!</div>
 
     <main class="main-content">
-      <section class="board-area">
-        <div id="board" class="board"></div>
-      </section>
-
+      <section class="board-area"><div id="board" class="board"></div></section>
       <aside class="sidebar">
         <div class="clue-box">
           <div class="clue-header">💡 지혜의 열쇠</div>
           <div class="clue-scroll" id="clueList"></div>
         </div>
-        
-        <div class="sidebar-footer">
-          <button id="submitBtn" class="btn btn-submit">다 풀었어요! 제출하기</button>
-          <button id="resetBtn" class="btn btn-reset">처음부터 다시 풀기</button>
-          <div id="resultBox" class="result-box" style="display: none;">
-            <strong>결과: <span id="resScore">0</span> / 16 정답!</strong><br/>
-            소요시간: <span id="resTime">00:00</span>
-          </div>
-        </div>
+        <button id="submitBtn" class="btn btn-submit">다 풀었어요! 제출하기</button>
+        <button id="resetBtn" class="btn btn-reset">처음부터 다시 풀기</button>
       </aside>
     </main>
   </div>
 
   <script>
-    const PUZZLE = {
+    // 사진 데이터를 바탕으로 한 정밀 좌표 시스템 (13x13)
+    const DATA = {
       size: 13,
       words: [
-        { id: "a1", no: 1, dir: "across", r: 4, c: 0, ans: "장애인차별금지법", ch: "ㅈㅇㅇㅊㅂㄱㅈㅂ", hint: "장애를 이유로 차별하는 것을 금지하는 법률." },
+        { id: "a1", no: 1, dir: "across", r: 3, c: 1, ans: "장애인차별금지법", ch: "ㅈㅇㅇㅊㅂㄱㅈㅂ", hint: "장애를 이유로 차별하는 것을 금지하는 법률." },
         { id: "d2", no: 2, dir: "down", r: 1, c: 1, ans: "지체장애", ch: "ㅈㅊㅈㅇ", hint: "신체의 기능에 장애가 있는 상태." },
-        { id: "a3", no: 3, dir: "across", r: 12, c: 4, ans: "유니버설디자인", ch: "ㅇㄴㅂㅅㄷㅈㅇ", hint: "누구나 편리하게 이용하도록 설계하는 것." },
-        { id: "a4", no: 4, dir: "across", r: 7, c: 0, ans: "배리어프리", ch: "ㅂㄹㅇㅍㄹ", hint: "고령자나 장애인이 살기 좋은 사회를 만들기 위해 장벽을 허물자는 운동." },
-        { id: "d5", no: 5, dir: "down", r: 6, c: 1, ans: "물리치료", ch: "ㅁㄹㅊㄹ", hint: "재활을 위해 신체 기능을 회복시키는 치료." },
-        { id: "d6", no: 6, dir: "down", r: 0, c: 10, ans: "의사소통", ch: "ㅇㅅㅅㅌ", hint: "생각이나 느낌을 주고받는 과정." },
-        { id: "a7", no: 7, dir: "across", r: 1, c: 9, ans: "경사로", ch: "ㄱㅅㄹ", hint: "휠체어 등이 이동할 수 있는 비탈길." },
-        { id: "a8", no: 8, dir: "across", r: 10, c: 0, ans: "보조공학", ch: "ㅂㅈㄱㅎ", hint: "장애인의 활동을 돕는 기기나 기술." },
-        { id: "d9", no: 9, dir: "down", r: 10, c: 3, ans: "학습권", ch: "ㅎㅅㄱ", hint: "누구나 교육을 받을 권리." },
-        { id: "d10", no: 10, dir: "down", r: 4, c: 2, ans: "인권", ch: "ㅇㄱ", hint: "사람으로서 마땅히 누려야 할 권리." },
-        { id: "a11", no: 11, dir: "across", r: 1, c: 6, ans: "안내견", ch: "ㅇㄴㄱ", hint: "시각장애인을 안전하게 안내하는 개." },
-        { id: "d12", no: 12, dir: "down", r: 8, c: 8, ans: "지적장애", ch: "ㅈㅈㅈㅇ", hint: "지적 발달이 늦어 생활에 지원이 필요한 상태." },
-        { id: "a13", no: 13, dir: "across", r: 10, c: 6, ans: "발달장애", ch: "ㅂㄷㅈㅇ", hint: "지적장애와 자폐성장애를 통칭하는 말." },
-        { id: "d14", no: 14, dir: "down", r: 10, c: 12, ans: "점자", ch: "ㅈㅈ", hint: "손가락으로 읽는 시각장애인용 문자." },
-        { id: "a15", no: 15, dir: "across", r: 12, c: 0, ans: "수어", ch: "ㅅㅇ", hint: "손의 움직임과 표정으로 대화하는 언어." },
-        { id: "a16", no: 16, dir: "across", r: 4, c: 10, ans: "통합교육", ch: "ㅌㅎㄱㅇ", hint: "장애학생과 비장애학생이 함께 배우는 교육." }
+        { id: "d3", no: 3, dir: "down", r: 0, c: 5, ans: "유니버설디자인", ch: "ㅇㄴㅂㅅㄷㅈㅇ", hint: "누구나 편리하게 이용하도록 설계하는 것." },
+        { id: "a4", no: 4, dir: "across", r: 6, c: 3, ans: "배리어프리", ch: "ㅂㄹㅇㅍㄹ", hint: "장벽을 허물자는 운동." },
+        { id: "d5", no: 5, dir: "down", r: 5, c: 4, ans: "물리치료", ch: "ㅁㄹㅊㄹ", hint: "신체 기능을 회복시키는 치료." },
+        { id: "d6", no: 6, dir: "down", r: 1, c: 11, ans: "의사소통", ch: "ㅇㅅㅅㅌ", hint: "생각이나 느낌을 주고받는 과정." },
+        { id: "a7", no: 7, dir: "across", r: 1, c: 0, ans: "경사로", ch: "ㄱㅅㄹ", hint: "휠체어용 비탈길." },
+        { id: "a8", no: 8, dir: "across", r: 9, c: 1, ans: "보조공학", ch: "ㅂㅈㄱㅎ", hint: "장애인 활동을 돕는 기기." },
+        { id: "d9", no: 9, dir: "down", r: 8, c: 1, ans: "학습권", ch: "ㅎㅅㄱ", hint: "교육을 받을 권리." },
+        { id: "d10", no: 10, dir: "down", r: 4, c: 2, ans: "인권", ch: "ㅇㄱ", hint: "마땅히 누려야 할 권리." },
+        { id: "a11", no: 11, dir: "across", r: 1, c: 8, ans: "안내견", ch: "ㅇㄴㄱ", hint: "시각장애인 안내 개." },
+        { id: "d12", no: 12, dir: "down", r: 7, c: 7, ans: "지적장애", ch: "ㅈㅈㅈㅇ", hint: "지적 발달이 늦은 상태." },
+        { id: "a13", no: 13, dir: "across", r: 8, c: 5, ans: "발달장애", ch: "ㅂㄷㅈㅇ", hint: "지적/자폐성 장애 통칭." },
+        { id: "d14", no: 14, dir: "down", r: 10, c: 11, ans: "점자", ch: "ㅈㅈ", hint: "시각장애인용 문자." },
+        { id: "a15", no: 15, dir: "across", r: 12, c: 1, ans: "수어", ch: "ㅅㅇ", hint: "손과 표정의 언어." },
+        { id: "a16", no: 16, dir: "across", r: 4, c: 8, ans: "통합교육", ch: "ㅌㅎㄱㅇ", hint: "함께 배우는 교육." }
       ]
     };
 
-    let state = { elapsed: 0, timerId: null, grid: new Map() };
+    let gridMap = new Map();
+    let seconds = 0;
 
     function init() {
-      PUZZLE.words.forEach(w => {
+      DATA.words.forEach(w => {
         w.ans.split('').forEach((char, i) => {
           const r = w.r + (w.dir === "down" ? i : 0);
           const c = w.c + (w.dir === "across" ? i : 0);
           const key = `${r}-${c}`;
-          if (!state.grid.has(key)) state.grid.set(key, { char, wordIds: [], startNo: null });
-          state.grid.get(key).wordIds.push(w.id);
-          if (i === 0) state.grid.get(key).startNo = w.no;
+          if (!gridMap.has(key)) gridMap.set(key, { char, wordIds: [], startNo: null });
+          gridMap.get(key).wordIds.push(w.id);
+          if (i === 0) gridMap.get(key).startNo = w.no;
         });
       });
       render();
-      state.timerId = setInterval(() => {
-        state.elapsed++;
-        const m = String(Math.floor(state.elapsed / 60)).padStart(2, '0');
-        const s = String(state.elapsed % 60).padStart(2, '0');
+      setInterval(() => {
+        seconds++;
+        const m = String(Math.floor(seconds/60)).padStart(2,'0'), s = String(seconds%60).padStart(2,'0');
         document.getElementById("timer").textContent = `${m}:${s}`;
       }, 1000);
     }
 
     function render() {
       const board = document.getElementById("board");
-      board.style.gridTemplateColumns = `repeat(${PUZZLE.size}, 1fr)`;
-      for (let r = 0; r < PUZZLE.size; r++) {
-        for (let c = 0; c < PUZZLE.size; c++) {
-          const data = state.grid.get(`${r}-${c}`);
+      board.style.gridTemplateColumns = `repeat(${DATA.size}, 1fr)`;
+      for (let r = 0; r < DATA.size; r++) {
+        for (let c = 0; c < DATA.size; c++) {
+          const d = gridMap.get(`${r}-${c}`);
           const cell = document.createElement("div");
-          cell.className = data ? "cell" : "cell block";
-          if (data) {
-            if (data.startNo) cell.innerHTML = `<span class="cell-num">${data.startNo}</span>`;
+          cell.className = d ? "cell" : "cell block";
+          if (d) {
+            if (d.startNo) cell.innerHTML = `<span class="cell-num">${d.startNo}</span>`;
             const input = document.createElement("input");
             input.maxLength = 1;
             input.id = `in-${r}-${c}`;
-            input.onfocus = () => highlight(data.wordIds[0], r, c);
-            input.oninput = (e) => {
-              if(e.target.value) moveNext(r, c, data.wordIds[0]);
-              updateScore();
-            };
+            input.onfocus = () => highlight(d.wordIds[0], r, c);
+            input.oninput = (e) => { if(e.target.value) moveNext(r,c,d.wordIds[0]); check(); };
             cell.appendChild(input);
           }
           board.appendChild(cell);
         }
       }
-
       const list = document.getElementById("clueList");
-      PUZZLE.words.sort((a,b) => a.no - b.no).forEach(w => {
+      DATA.words.sort((a,b)=>a.no - b.no).forEach(w => {
         const card = document.createElement("div");
         card.className = "clue-card";
         card.id = `clue-${w.id}`;
-        card.innerHTML = `
-          <div class="clue-title">
-            <span class="badge ${w.dir}">${w.no}</span>
-            <span class="chosung">${w.ch}</span>
-          </div>
-          <div class="clue-text">${w.hint}</div>
-        `;
+        card.innerHTML = `<div class="clue-title"><span class="badge ${w.dir}">${w.dir==='across'?'가로':'세로'} ${w.no}</span><span class="chosung">${w.ch}</span></div><div class="clue-text">${w.hint}</div>`;
         card.onclick = () => document.getElementById(`in-${w.r}-${w.c}`).focus();
         list.appendChild(card);
       });
     }
 
-    function highlight(id, curR, curC) {
-      document.querySelectorAll('.cell').forEach(c => c.classList.remove('active', 'highlight'));
-      document.querySelectorAll('.clue-card').forEach(i => i.classList.remove('active'));
-      const word = PUZZLE.words.find(w => w.id === id);
+    function highlight(id, cr, cc) {
+      document.querySelectorAll('.cell').forEach(c=>c.classList.remove('active','highlight'));
+      document.querySelectorAll('.clue-card').forEach(i=>i.classList.remove('active'));
+      const w = DATA.words.find(x=>x.id===id);
       const clue = document.getElementById(`clue-${id}`);
       clue.classList.add('active');
       clue.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      word.ans.split('').forEach((_, i) => {
-        const r = word.r + (word.dir === "down" ? i : 0);
-        const c = word.c + (word.dir === "across" ? i : 0);
+      w.ans.split('').forEach((_,i)=>{
+        const r=w.r+(w.dir==="down"?i:0), c=w.c+(w.dir==="across"?i:0);
         const cell = document.getElementById(`in-${r}-${c}`).parentElement;
         cell.classList.add('highlight');
-        if(r === curR && c === curC) cell.classList.add('active');
+        if(r===cr && c===cc) cell.classList.add('active');
       });
     }
 
-    function moveNext(r, c, id) {
-      const w = PUZZLE.words.find(x => x.id === id);
-      let nr = r, nc = c;
-      if (w.dir === "across") nc++; else nr++;
+    function moveNext(r,c,id) {
+      const w=DATA.words.find(x=>x.id===id);
+      let nr=r, nc=c;
+      if(w.dir==="across") nc++; else nr++;
       const next = document.getElementById(`in-${nr}-${nc}`);
-      if (next) next.focus();
+      if(next) next.focus();
     }
 
-    function updateScore() {
-      let score = 0;
-      PUZZLE.words.forEach(w => {
-        const val = w.ans.split('').map((_, i) => {
-          const r = w.r + (w.dir === "down" ? i : 0);
-          const c = w.c + (w.dir === "across" ? i : 0);
-          return document.getElementById(`in-${r}-${c}`).value;
-        }).join('');
-        if (val === w.ans) score++;
+    function check() {
+      let count = 0;
+      DATA.words.forEach(w => {
+        const user = w.ans.split('').map((_,i)=>document.getElementById(`in-${w.r+(w.dir==="down"?i:0)}-${w.c+(w.dir==="across"?i:0)}`).value).join('');
+        if(user === w.ans) count++;
       });
-      document.getElementById("pText").textContent = `${score} / 16`;
-      document.getElementById("pFill").style.width = `${(score/16)*100}%`;
-      return score;
+      document.getElementById("pText").textContent = `${count} / 16`;
+      document.getElementById("pFill").style.width = `${(count/16)*100}%`;
     }
 
-    document.getElementById("submitBtn").onclick = () => {
-      const score = updateScore();
-      document.getElementById("resScore").textContent = score;
-      document.getElementById("resTime").textContent = document.getElementById("timer").textContent;
-      document.getElementById("resultBox").style.display = "block";
-      alert(`제출 완료! 정답: ${score} / 16`);
-    };
-
+    document.getElementById("submitBtn").onclick = () => alert(`제출 완료! 정답: ${document.getElementById("pText").textContent}`);
     document.getElementById("resetBtn").onclick = () => { if(confirm("초기화하시겠습니까?")) location.reload(); };
 
     init();
