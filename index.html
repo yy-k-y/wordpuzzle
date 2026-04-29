@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>장애공감 가로세로퀴즈</title>
+  <title>장애공감 낱말퀴즈</title>
   <style>
     @font-face { font-family: 'CookieRun'; src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/CookieRun-Regular.woff') format('woff'); font-weight: 400; font-style: normal; }
     :root {
@@ -15,79 +15,71 @@
     
     .app { width: 100%; max-width: 1200px; margin: 0 auto; padding: 10px; height: 100%; display: flex; flex-direction: column; }
     
-    /* 헤더 영역 모바일에서 더 줄임 */
+    /* 헤더 영역 - 높이 최소화 */
     .top-header { text-align: center; flex-shrink: 0; padding-bottom: 5px; }
-    .top-header h1 { margin: 2px 0 5px; font-size: clamp(18px, 4.5vw, 28px); color: var(--main-color-dark); }
+    .top-header h1 { margin: 2px 0 3px; font-size: clamp(16px, 4vw, 26px); color: var(--main-color-dark); }
     
     .top-row { display: flex; gap: 8px; justify-content: center; align-items: center; margin-bottom: 2px; }
-    .progress-shell { background: #fff; border-radius: 20px; padding: 4px 12px; box-shadow: var(--shadow); display: flex; align-items: center; gap: 8px; flex: 1; max-width: 250px; border: 1.5px solid #E2E8F0; }
-    .progress-track { flex: 1; height: 8px; background: #EDF2F7; border-radius: 999px; overflow: hidden; }
+    .progress-shell { background: #fff; border-radius: 20px; padding: 3px 10px; box-shadow: var(--shadow); display: flex; align-items: center; gap: 8px; flex: 1; max-width: 200px; border: 1px solid #E2E8F0; }
+    .progress-track { flex: 1; height: 6px; background: #EDF2F7; border-radius: 999px; overflow: hidden; }
     .progress-fill { width: 0%; height: 100%; background: var(--main-color); transition: width 0.4s ease; }
-    .timer-pill { background: #fff; padding: 4px 12px; border-radius: 20px; box-shadow: var(--shadow); font-weight: 700; color: var(--accent-color); border: 1.5px solid #E2E8F0; font-size: 13px; }
+    .timer-pill { background: #fff; padding: 3px 10px; border-radius: 20px; box-shadow: var(--shadow); font-weight: 700; color: var(--accent-color); border: 1px solid #E2E8F0; font-size: 12px; }
+
+    /* 조작 안내 문구 */
+    .usage-guide { text-align: center; font-size: 11px; color: #718096; margin-bottom: 5px; font-weight: 700; }
 
     .layout { display: flex; gap: 12px; flex: 1; min-height: 0; }
     
-    /* PC용 기본 설정 */
-    .panel { border-radius: 15px; box-shadow: var(--shadow); display: flex; flex-direction: column; overflow: hidden; background: #fff; border: 1px solid #fff; }
-    .board-panel { flex: 1.3; background-color: #E6FFFA; padding: 15px; min-height: 0; display: flex; align-items: center; justify-content: center; }
+    .panel { border-radius: 12px; box-shadow: var(--shadow); display: flex; flex-direction: column; overflow: hidden; background: #fff; border: 1px solid #fff; }
+    .board-panel { flex: 1.3; background-color: #E6FFFA; padding: 10px; min-height: 0; display: flex; align-items: center; justify-content: center; }
     .board-wrap { width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; }
-    .board { display: grid; width: 100%; height: 100%; max-width: 580px; max-height: 580px; aspect-ratio: 1 / 1; gap: var(--cell-gap); }
+    .board { display: grid; width: 100%; height: 100%; max-width: 550px; max-height: 550px; aspect-ratio: 1 / 1; gap: var(--cell-gap); }
     
-    .cell { width: 100%; height: 100%; border: 1px solid #A0AEC0; border-radius: 2px; background: #fff; position: relative; }
-    .cell input { width: 100%; height: 100%; border: none; outline: none; text-align: center; background: transparent; font-size: clamp(11px, 2.5vmin, 18px); font-family: 'CookieRun'; font-weight: 700; color: #1A202C; padding: 0; }
-    .cell-number { position: absolute; top: 0px; left: 1px; font-size: 8px; font-weight: 700; color: var(--main-color-dark); pointer-events: none; }
+    .cell { width: 100%; height: 100%; border: 1px solid #A0AEC0; border-radius: 1px; background: #fff; position: relative; }
+    .cell input { width: 100%; height: 100%; border: none; outline: none; text-align: center; background: transparent; font-size: clamp(10px, 2.5vmin, 18px); font-family: 'CookieRun'; font-weight: 700; color: #1A202C; padding: 0; }
+    .cell-number { position: absolute; top: 0px; left: 1px; font-size: 7px; font-weight: 700; color: var(--main-color-dark); pointer-events: none; }
     .block { background: #EDF2F7 !important; border: none; opacity: 0.5; }
     
     .cell.active-cell { border: 2px solid var(--accent-color); z-index: 5; background: #FFFBEB; }
     .cell.highlight { background: #FFFFAF; }
-    .cell.correct input { background: #D1FAE5; color: var(--main-color-dark); }
-    .cell.wrong input { background: #FFF5F5; color: #E53E3E; }
     
-    .sidebar { width: 320px; flex-shrink: 0; }
-    .sidebar-header { background: var(--main-color); color: #fff; padding: 10px; font-weight: 700; text-align: center; font-size: 16px; }
-    .sidebar-body { padding: 12px; overflow-y: auto; flex: 1; }
-    .clue-title { font-size: 14px; font-weight: 700; color: var(--main-color-dark); border-bottom: 2px dashed #E2E8F0; padding-bottom: 5px; margin-bottom: 8px; }
+    /* 힌트 영역 */
+    .sidebar { width: 300px; flex-shrink: 0; }
+    .sidebar-header { background: var(--main-color); color: #fff; padding: 8px; font-weight: 700; text-align: center; font-size: 15px; }
+    .sidebar-body { padding: 10px; overflow-y: auto; flex: 1; }
+    .clue-title { font-size: 13px; font-weight: 700; color: var(--main-color-dark); border-bottom: 2px dashed #E2E8F0; padding-bottom: 4px; margin-bottom: 6px; }
     
-    .clue-card { border: 1.5px solid #EDF2F7; border-radius: 8px; padding: 10px; cursor: pointer; background: #fff; margin-bottom: 8px; }
+    .clue-card { border: 1px solid #EDF2F7; border-radius: 6px; padding: 8px; cursor: pointer; background: #fff; margin-bottom: 6px; }
     .clue-card.active-clue { border-color: var(--accent-color); background: #FFFFAF; }
-    .clue-header { display: flex; align-items: center; margin-bottom: 5px; gap: 6px; }
-    .badge { padding: 2px 6px; border-radius: 4px; color: #fff; font-size: 10px; font-weight: 700; }
+    .clue-header { display: flex; align-items: center; margin-bottom: 4px; gap: 5px; }
+    .badge { padding: 1px 5px; border-radius: 3px; color: #fff; font-size: 9px; font-weight: 700; }
     .badge.across { background: var(--accent-color); }
     .badge.down { background: #63B3ED; }
-    .chosung-pill { background: #EDF2F7; color: #4A5568; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 700; }
-    .clue-desc { font-size: 13px; line-height: 1.4; color: #4A5568; word-break: keep-all; }
+    .chosung-pill { background: #EDF2F7; color: #4A5568; padding: 1px 6px; border-radius: 8px; font-size: 10px; font-weight: 700; }
+    .clue-desc { font-size: 12px; line-height: 1.3; color: #4A5568; word-break: keep-all; }
     
-    .footer-btns { padding: 10px; background: #F7FAFC; border-top: 1px solid #E2E8F0; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-    .action-btn { padding: 10px; border: none; border-radius: 8px; color: #fff; font-family: 'CookieRun'; font-weight: 700; cursor: pointer; font-size: 14px; }
+    .footer-btns { padding: 8px; background: #F7FAFC; border-top: 1px solid #E2E8F0; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .action-btn { padding: 10px; border: none; border-radius: 8px; color: #fff; font-family: 'CookieRun'; font-weight: 700; cursor: pointer; font-size: 13px; }
     #submitBtn { background: var(--main-color); grid-column: span 2; }
     #resetBtn { background: #A0AEC0; grid-column: span 2; }
 
-    /* 모바일 강제 자동 축소 레이아웃 */
+    /* 모바일 강제 자동 축소 및 안내문구 유지 */
     @media (max-width: 850px) {
       .app { padding: 5px; }
       .layout { flex-direction: column; overflow: hidden; }
-      
-      .board-panel { 
-        flex: none; 
-        padding: 5px; 
-        height: auto; /* 높이를 자동에 맡김 */
-        background-color: #E6FFFA; 
-      }
-      
+      .board-panel { flex: none; padding: 5px; height: auto; }
       .board { 
-        width: 92vw; /* 화면 너비의 92%로 고정 (너비에 맞춰 높이가 자동 축소됨) */
-        height: 92vw; 
-        max-width: 400px; /* 너무 커지지 않게 제한 */
-        max-height: 400px;
+        width: 94vw; 
+        height: 94vw; 
+        max-width: 380px; 
+        max-height: 380px; 
         margin: 0 auto; 
       }
-      
       .sidebar { width: 100%; flex: 1; min-height: 0; }
-      .sidebar-body { display: flex; flex-direction: row; gap: 10px; padding: 10px; }
+      .sidebar-body { display: flex; flex-direction: row; gap: 8px; padding: 8px; }
       .sidebar-body > div { flex: 1; min-width: 0; }
-      
-      .footer-btns { grid-template-columns: 1fr 1fr; padding: 6px; }
-      #submitBtn, #resetBtn { grid-column: span 1; padding: 8px; font-size: 13px; }
+      .footer-btns { grid-template-columns: 1fr 1fr; }
+      #submitBtn, #resetBtn { grid-column: span 1; padding: 8px; }
     }
   </style>
 </head>
@@ -98,11 +90,13 @@
       <div class="top-row">
         <div class="progress-shell">
           <div class="progress-track"><div id="progressFill" class="progress-fill"></div></div>
-          <div id="solvedCountText" style="font-size:11px; font-weight:700; color:var(--main-color-dark);">0 / 16</div>
+          <div id="solvedCountText" style="font-size:11px; font-weight:700;">0 / 16</div>
         </div>
         <div class="timer-pill">⏰ <span id="timer">00:00</span></div>
       </div>
     </header>
+
+    <div class="usage-guide">💡 각 칸을 클릭해 한 글자씩 입력하거나, Tab키로 이동할 수 있어요!</div>
 
     <main class="layout">
       <section class="panel board-panel">
@@ -121,7 +115,6 @@
             <div id="downList" class="clue-list"></div>
           </div>
         </div>
-        <div id="resultBox" style="display:none; text-align:center; padding:5px; background:#E6FFFA; font-size:12px; border-top:1px solid #eee;"></div>
         <div class="footer-btns">
           <button id="submitBtn" class="action-btn">제출하기</button>
           <button id="resetBtn" class="action-btn">다시풀기</button>
@@ -131,6 +124,7 @@
   </div>
 
   <script>
+    // [PUZZLE 데이터 및 스크립트 로직 유지]
     const PUZZLE = {
       size: 15,
       words: [
@@ -157,7 +151,7 @@
 
     function init() {
       state.grid.clear();
-      for (const w of PUZZLE.words) {
+      PUZZLE.words.forEach(w => {
         w.answer.split('').forEach((char, i) => {
           const r = w.row + (w.dir === "down" ? i : 0);
           const c = w.col + (w.dir === "across" ? i : 0);
@@ -166,7 +160,7 @@
           state.grid.get(key).wordIds.push(w.id);
           if (i === 0) state.grid.get(key).startNo = w.no;
         });
-      }
+      });
       renderBoard();
       renderClues();
       startTimer();
@@ -211,13 +205,7 @@
         const card = document.createElement("div");
         card.className = "clue-card";
         card.id = `clue-${w.id}`;
-        card.innerHTML = `
-          <div class="clue-header">
-            <span class="badge ${w.dir}">${w.no}</span>
-            <span class="chosung-pill">${w.chosung}</span>
-          </div>
-          <div class="clue-desc">${w.hint}</div>
-        `;
+        card.innerHTML = `<div class="clue-header"><span class="badge ${w.dir}">${w.no}</span><span class="chosung-pill">${w.chosung}</span></div><div class="clue-desc">${w.hint}</div>`;
         card.onclick = () => {
           highlightWord(w.id);
           const targetInput = document.querySelector(`input[data-r="${w.row}"][data-c="${w.col}"]`);
@@ -234,7 +222,6 @@
       document.querySelectorAll('.clue-card').forEach(el => el.classList.remove('active-clue'));
       const activeClue = document.getElementById(`clue-${wordId}`);
       if(activeClue) activeClue.classList.add('active-clue');
-
       word.answer.split('').forEach((_, i) => {
         const r = word.row + (word.dir === "down" ? i : 0);
         const c = word.col + (word.dir === "across" ? i : 0);
@@ -281,9 +268,7 @@
         }).join('');
         if (userAns === w.answer) correct++;
       });
-      const res = document.getElementById("resultBox");
-      res.style.display = "block";
-      res.innerHTML = `🏁 결과: ${correct} / ${PUZZLE.words.length} 정답!`;
+      alert(`🏁 결과: ${correct} / ${PUZZLE.words.length} 정답입니다!`);
     };
 
     document.getElementById("resetBtn").onclick = () => { if(confirm("다시 풀까요?")) location.reload(); };
