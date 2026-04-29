@@ -43,10 +43,10 @@
     
     .sidebar { width: 300px; flex-shrink: 0; }
     .sidebar-header { background: var(--main-color); color: #fff; padding: 8px; font-weight: 700; text-align: center; font-size: 15px; }
-    .sidebar-body { padding: 10px; overflow-y: auto; flex: 1; }
+    .sidebar-body { padding: 10px; overflow-y: auto; flex: 1; scroll-behavior: smooth; }
     .clue-title { font-size: 13px; font-weight: 700; color: var(--main-color-dark); border-bottom: 2px dashed #E2E8F0; padding-bottom: 4px; margin-bottom: 6px; }
     
-    .clue-card { border: 1px solid #EDF2F7; border-radius: 6px; padding: 8px; cursor: pointer; background: #fff; margin-bottom: 6px; }
+    .clue-card { border: 1px solid #EDF2F7; border-radius: 6px; padding: 8px; cursor: pointer; background: #fff; margin-bottom: 6px; transition: background 0.3s; }
     .clue-card.active-clue { border-color: var(--accent-color); background: #FFFFAF; }
     .clue-header { display: flex; align-items: center; margin-bottom: 4px; gap: 5px; }
     .badge { padding: 1px 5px; border-radius: 3px; color: #fff; font-size: 9px; font-weight: 700; }
@@ -66,8 +66,7 @@
       .board-panel { flex: none; padding: 5px; height: auto; }
       .board { width: 94vw; height: 94vw; max-width: 380px; max-height: 380px; margin: 0 auto; }
       .sidebar { width: 100%; flex: 1; min-height: 0; }
-      .sidebar-body { display: flex; flex-direction: row; gap: 8px; padding: 8px; }
-      .sidebar-body > div { flex: 1; min-width: 0; }
+      .sidebar-body { padding: 8px; } /* 모바일에서는 1열로 힌트 정렬 */
       .footer-btns { grid-template-columns: 1fr 1fr; }
       #submitBtn, #resetBtn { grid-column: span 1; padding: 8px; }
     }
@@ -86,7 +85,7 @@
       </div>
     </header>
 
-    <div class="usage-guide">💡 칸을 클릭해 입력하세요! Tab키로 이동 가능해요.</div>
+    <div class="usage-guide">💡 칸을 클릭해 입력하세요! 자동으로 다음 칸으로 넘어갑니다.</div>
 
     <main class="layout">
       <section class="panel board-panel">
@@ -95,15 +94,11 @@
 
       <aside class="panel sidebar">
         <div class="sidebar-header">💡 힌트 리스트</div>
-        <div class="sidebar-body">
-          <div>
-            <div class="clue-title">가로</div>
-            <div id="acrossList" class="clue-list"></div>
-          </div>
-          <div>
-            <div class="clue-title">세로</div>
-            <div id="downList" class="clue-list"></div>
-          </div>
+        <div id="sidebarBody" class="sidebar-body">
+          <div class="clue-title">가로</div>
+          <div id="acrossList" class="clue-list"></div>
+          <div class="clue-title">세로</div>
+          <div id="downList" class="clue-list"></div>
         </div>
         <div class="footer-btns">
           <button id="submitBtn" class="action-btn">제출하기</button>
@@ -136,7 +131,7 @@
       ]
     };
 
-    let state = { elapsedSec: 0, timerId: null, isFinished: false, grid: new Map() };
+    let state = { elapsedSec: 0, timerId: null, isFinished: false, grid: new Map(), currentWordId: "a1" };
 
     function init() {
       state.grid.clear();
@@ -175,15 +170,61 @@
             const input = document.createElement("input");
             input.maxLength = 1;
             input.dataset.r = r; input.dataset.c = c;
-            input.onfocus = () => highlightWord(data.wordIds[0]);
+            
+            // 클릭 시 강조 및 힌트 자동 스크롤
+            input.onfocus = () => {
+              const wordId = data.wordIds[0];
+              state.currentWordId = wordId;
+              highlightWord(wordId);
+              scrollToClue(wordId);
+            };
+
+            // 입력 시 자동 이동
             input.oninput = (e) => {
               e.target.value = e.target.value.replace(/[^ㄱ-ㅎ가-힣]/g, '');
+              if (e.target.value.length === 1) {
+                moveToNextCell(parseInt(input.dataset.r), parseInt(input.dataset.c));
+              }
               updateProgress();
             };
+
             cell.appendChild(input);
           }
           board.appendChild(cell);
         }
+      }
+    }
+
+    // 다음 칸으로 자동 포커스 이동
+    function moveToNextCell(r, c) {
+      const word = PUZZLE.words.find(w => w.id === state.currentWordId);
+      if (!word) return;
+
+      const idx = word.answer.split('').findIndex((_, i) => {
+        const currR = word.row + (word.dir === "down" ? i : 0);
+        const currC = word.col + (word.dir === "across" ? i : 0);
+        return currR === r && currC === c;
+      });
+
+      if (idx !== -1 && idx < word.answer.length - 1) {
+        const nextR = word.row + (word.dir === "down" ? (idx + 1) : 0);
+        const nextC = word.col + (word.dir === "across" ? (idx + 1) : 0);
+        const nextInput = document.querySelector(`input[data-r="${nextR}"][data-c="${nextC}"]`);
+        if (nextInput) nextInput.focus();
+      }
+    }
+
+    // 힌트 카드로 스크롤 이동
+    function scrollToClue(wordId) {
+      const clueCard = document.getElementById(`clue-${wordId}`);
+      const sidebarBody = document.getElementById("sidebarBody");
+      if (clueCard && sidebarBody) {
+        const cardTop = clueCard.offsetTop;
+        const bodyTop = sidebarBody.offsetTop;
+        sidebarBody.scrollTo({
+          top: cardTop - bodyTop - 10,
+          behavior: 'smooth'
+        });
       }
     }
 
@@ -196,6 +237,7 @@
         card.id = `clue-${w.id}`;
         card.innerHTML = `<div class="clue-header"><span class="badge ${w.dir}">${w.no}</span><span class="chosung-pill">${w.chosung}</span></div><div class="clue-desc">${w.hint}</div>`;
         card.onclick = () => {
+          state.currentWordId = w.id;
           highlightWord(w.id);
           const targetInput = document.querySelector(`input[data-r="${w.row}"][data-c="${w.col}"]`);
           if(targetInput) targetInput.focus();
@@ -209,8 +251,10 @@
       if(!word) return;
       document.querySelectorAll('.cell').forEach(el => el.classList.remove('active-cell', 'highlight'));
       document.querySelectorAll('.clue-card').forEach(el => el.classList.remove('active-clue'));
+      
       const activeClue = document.getElementById(`clue-${wordId}`);
       if(activeClue) activeClue.classList.add('active-clue');
+
       word.answer.split('').forEach((_, i) => {
         const r = word.row + (word.dir === "down" ? i : 0);
         const c = word.col + (word.dir === "across" ? i : 0);
