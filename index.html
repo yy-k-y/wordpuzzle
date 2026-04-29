@@ -29,7 +29,6 @@
       font-family: 'CookieRun', 'Comic Sans MS', 'Malgun Gothic', sans-serif;
       background: linear-gradient(135deg, var(--bg-top), var(--bg-bottom));
       color: var(--text-dark);
-      /* 전체 화면 스크롤을 원천 차단하여 앱처럼 고정 */
       overflow: hidden; 
     }
 
@@ -86,7 +85,6 @@
       background: #fff;
     }
 
-    /* 1. 퍼즐판 패널 (스크롤 없이 화면에 꽉 맞게 자동 비율 축소!) */
     .board-panel { 
       flex: 1; 
       display: flex;
@@ -113,10 +111,10 @@
       flex: 1;
       display: flex;
       justify-content: center;
-      align-items: center; /* 상하좌우 완벽 중앙 정렬 */
+      align-items: center; 
       width: 100%;
       height: 100%;
-      overflow: hidden; /* 퍼즐판 스크롤 원천 차단 */
+      overflow: hidden; 
     }
     
     .board { 
@@ -125,7 +123,7 @@
       height: 100%;
       max-width: 550px;
       max-height: 550px;
-      aspect-ratio: 1 / 1; /* 완벽한 정사각형 유지 */
+      aspect-ratio: 1 / 1; 
       gap: var(--cell-gap); 
       margin: auto; 
     }
@@ -142,13 +140,13 @@
     .cell input {
       width: 100%; height: 100%; border: none; outline: none; border-radius: 4px;
       text-align: center; background: transparent; 
-      font-size: clamp(12px, 3.5vmin, 26px); /* 화면 크기에 맞춰 글씨도 줄어듦 */
+      font-size: clamp(12px, 3.2vmin, 24px); 
       font-family: 'CookieRun', sans-serif; font-weight: 700; color: #1A202C; padding: 0;
     }
     
     .cell-number { 
       position: absolute; top: 1px; left: 3px; 
-      font-size: clamp(8px, 1.2vmin, 12px); 
+      font-size: clamp(8px, 1vmin, 11px); 
       font-weight: 700; color: var(--main-color-dark); pointer-events: none; 
     }
     
@@ -160,8 +158,6 @@
     .cell.wrong { border: 2px solid #FC8181; }
     .cell.wrong input { background: #FFF5F5; color: #E53E3E; }
 
-
-    /* 2. 힌트 사이드바 (여기만 스크롤 가능) */
     .sidebar { 
       width: 360px; 
       flex-shrink: 0;
@@ -209,7 +205,6 @@
     .reset-btn { background: #A0AEC0; box-shadow: 0 4px 0 #718096; margin-top: 4px;}
     .result-box { margin-top: 10px; padding: 10px; font-weight: 700; color: var(--main-color-dark); background: #E6FFFA; border-radius: 10px; border: 2px dashed var(--main-color); display: none; line-height: 1.5; text-align: center; font-size: 13px;}
 
-    /* 모바일 환경 대응 (퍼즐판이 상단 절반, 힌트가 하단 절반) */
     @media (max-width: 900px) {
       .app { padding: 10px; }
       .layout { flex-direction: column; gap: 12px; }
@@ -264,21 +259,21 @@
   </div>
 
   <script>
-    // 🔥 퍼즐판 사이즈를 최적의 비율(10x10)로 압축 및 좌표 완벽 재계산
-    // 단어 간 의도치 않은 간섭을 모두 없애고 완벽하게 교차하도록 세팅했습니다.
+    // 🔥 문제 수와 교육적 밀도를 높인 11개의 단어 완벽 교차 맵 (11x11 사이즈)
     const PUZZLE = {
-      size: 10, 
+      size: 11, 
       words: [
-        { id: "d1", no: 1, dir: "down", row: 0, col: 2, answer: "저상버스", hint: "계단이 없어 휠체어나 유모차가 쉽게 탈 수 있도록 차체가 낮게 만들어진 버스." },
-        { id: "a2", no: 2, dir: "across", row: 2, col: 0, answer: "유니버설디자인", hint: "성별, 나이, 장애 유무와 상관없이 누구나 편리하고 안전하게 이용할 수 있도록 설계하는 디자인." },
-        { id: "d3", no: 3, dir: "down", row: 2, col: 5, answer: "자폐성장애", hint: "다른 사람과 소통하고 관계를 맺는 데 어려움을 겪으며, 특정 행동을 반복하는 특징을 가진 발달장애의 한 종류." },
-        { id: "a4", no: 4, dir: "across", row: 5, col: 5, answer: "장애공감", hint: "장애인의 입장에서 생각하고 그들의 어려움을 마음으로 이해하며 존중하는 태도." },
-        { id: "d5", no: 5, dir: "down", row: 5, col: 8, answer: "감수성", hint: "일상생활에서 다른 사람의 어려움이나 불편함을 민감하게 느끼고 공감할 수 있는 마음의 능력. (예: 인권 OOO)" },
-        { id: "a6", no: 6, dir: "across", row: 6, col: 2, answer: "지적장애", hint: "생각하고 배우고 판단하는 등 지적인 능력이 발달하는 데 어려움이 있어 일상생활에 지원이 필요한 장애." },
-        { id: "d6", no: 6, dir: "down", row: 6, col: 2, answer: "지체장애", hint: "팔, 다리, 척추 등 신체 일부의 기능을 자유롭게 움직이기 어려워 생활에 불편을 겪는 장애." },
-        { id: "a7", no: 7, dir: "across", row: 7, col: 6, answer: "다양성", hint: "사람마다 생김새, 생각, 능력, 장애 유무 등이 모두 다르다는 것을 인정하고 존중하는 가치." },
-        { id: "a8", no: 8, dir: "across", row: 8, col: 2, answer: "장애인", hint: "신체나 정신의 다름으로 인해 일상생활이나 사회생활에 어려움을 겪는 사람을 존중하여 부르는 말." },
-        { id: "d9", no: 9, dir: "down", row: 8, col: 4, answer: "인권", hint: "사람이라면 누구나 태어날 때부터 당연히 가지는, 존중받고 차별받지 않을 소중한 권리." }
+        { id: "a1", no: 1, dir: "across", row: 6, col: 2, answer: "장애인차별금지법", hint: "장애를 이유로 한 부당한 차별을 금지하고 장애인의 권리를 구제하기 위해 제정된 법률." },
+        { id: "d2", no: 2, dir: "down", row: 3, col: 2, answer: "자폐성장애", hint: "다른 사람과 소통하고 관계를 맺는 데 어려움을 겪으며, 특정 행동을 반복하는 발달장애의 한 종류." },
+        { id: "d3", no: 3, dir: "down", row: 0, col: 4, answer: "유니버설디자인", hint: "성별, 나이, 장애 유무와 상관없이 누구나 편리하고 안전하게 이용할 수 있도록 설계하는 디자인." },
+        { id: "a4", no: 4, dir: "across", row: 2, col: 4, answer: "배리어프리", hint: "장애인과 비장애인 모두 불편 없이 이용하도록 물리적, 제도적 장벽을 허무는 운동." },
+        { id: "d5", no: 5, dir: "down", row: 1, col: 8, answer: "물리치료", hint: "신체적 장애나 통증을 완화하고 기능을 회복하기 위해 운동, 열, 전기 등을 이용하는 치료 방법." },
+        { id: "d6", no: 6, dir: "down", row: 6, col: 8, answer: "지체장애", hint: "팔, 다리, 척추 등 신체 일부의 기능을 자유롭게 움직이기 어려워 생활에 불편을 겪는 장애." },
+        { id: "a7", no: 7, dir: "across", row: 8, col: 6, answer: "시각장애인", hint: "눈의 기능이 손상되어 앞을 보지 못하거나 글씨를 읽는 데 큰 어려움을 겪는 사람." },
+        { id: "d8", no: 8, dir: "down", row: 8, col: 10, answer: "인권", hint: "사람이라면 누구나 태어날 때부터 당연히 가지는, 존중받고 차별받지 않을 소중한 권리." },
+        { id: "a9", no: 9, dir: "across", row: 5, col: 0, answer: "다양성", hint: "사람마다 생김새, 생각, 능력, 장애 유무 등이 모두 다르다는 것을 인정하고 존중하는 가치." },
+        { id: "a10", no: 10, dir: "across", row: 3, col: 1, answer: "점자", hint: "시각장애인이 손끝으로 톡톡 읽을 수 있도록 만든 올록볼록한 글자." },
+        { id: "d11", no: 11, dir: "down", row: 1, col: 6, answer: "수어", hint: "청각장애인이 손동작, 표정, 몸짓으로 내 마음을 전달하는 아름다운 시각 언어." }
       ]
     };
 
@@ -469,7 +464,7 @@
     });
 
     buildGrid(); renderBoard(); renderClues(); updateProgress(); startTimer();
-    selectWord("a2");
+    selectWord("a1");
   </script>
 </body>
 </html>
