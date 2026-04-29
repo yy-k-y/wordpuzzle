@@ -8,59 +8,72 @@
     @font-face { font-family: 'CookieRun'; src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/CookieRun-Regular.woff') format('woff'); font-weight: 400; font-style: normal; }
     :root {
       --bg-top: #FFFDE4; --bg-bottom: #E4FFEE; --main-color: #38C9A3; --main-color-dark: #2AA383;
-      --accent-color: #FFC045; --text-dark: #2D3748; --shadow: 0 8px 24px rgba(56, 201, 163, 0.15); --cell-gap: 4px;
+      --accent-color: #FFC045; --text-dark: #2D3748; --shadow: 0 8px 24px rgba(56, 201, 163, 0.15); --cell-gap: 2px;
     }
-    * { box-sizing: border-box; }
-    body { margin: 0; font-family: 'CookieRun', sans-serif; background: linear-gradient(135deg, var(--bg-top), var(--bg-bottom)); color: var(--text-dark); overflow: hidden; }
-    .app { max-width: 1200px; margin: 0 auto; padding: 16px; height: 100dvh; display: flex; flex-direction: column; }
-    .top-header { text-align: center; margin-bottom: 12px; flex-shrink: 0; }
-    .top-header h1 { margin: 0 0 12px; font-size: clamp(20px, 4vw, 32px); color: var(--main-color-dark); text-shadow: 2px 2px 0px #fff; }
-    .top-row { display: flex; gap: 10px; justify-content: center; align-items: center; margin-bottom: 10px; }
-    .progress-shell { background: #fff; border-radius: 30px; padding: 8px 16px; box-shadow: var(--shadow); display: flex; align-items: center; gap: 10px; flex: 1; max-width: 300px; border: 2px solid #E2E8F0; }
-    .progress-track { flex: 1; height: 10px; background: #EDF2F7; border-radius: 999px; overflow: hidden; }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body { margin: 0; font-family: 'CookieRun', sans-serif; background: linear-gradient(135deg, var(--bg-top), var(--bg-bottom)); color: var(--text-dark); height: 100dvh; display: flex; flex-direction: column; }
+    
+    .app { width: 100%; max-width: 1200px; margin: 0 auto; padding: 10px; height: 100%; display: flex; flex-direction: column; overflow: hidden; }
+    
+    .top-header { text-align: center; flex-shrink: 0; padding-bottom: 5px; }
+    .top-header h1 { margin: 5px 0; font-size: clamp(18px, 5vw, 28px); color: var(--main-color-dark); text-shadow: 1px 1px 0px #fff; }
+    
+    .top-row { display: flex; gap: 8px; justify-content: center; align-items: center; margin-bottom: 8px; }
+    .progress-shell { background: #fff; border-radius: 20px; padding: 5px 12px; box-shadow: var(--shadow); display: flex; align-items: center; gap: 8px; flex: 1; max-width: 250px; border: 1.5px solid #E2E8F0; }
+    .progress-track { flex: 1; height: 8px; background: #EDF2F7; border-radius: 999px; overflow: hidden; }
     .progress-fill { width: 0%; height: 100%; background: var(--main-color); transition: width 0.4s ease; }
-    .timer-pill { background: #fff; padding: 8px 16px; border-radius: 30px; box-shadow: var(--shadow); font-weight: 700; color: var(--accent-color); border: 2px solid #E2E8F0; }
-    
-    .guide-box { background: #fff; border: 2px dashed var(--main-color); border-radius: 12px; padding: 8px 12px; margin-bottom: 10px; text-align: center; font-size: 14px; color: var(--main-color-dark); }
+    .timer-pill { background: #fff; padding: 5px 12px; border-radius: 20px; box-shadow: var(--shadow); font-weight: 700; color: var(--accent-color); border: 1.5px solid #E2E8F0; font-size: 14px; }
 
-    .layout { display: flex; gap: 16px; flex: 1; min-height: 0; }
-    .panel { border-radius: 20px; box-shadow: var(--shadow); display: flex; flex-direction: column; overflow: hidden; background: #fff; border: 2px solid #fff; }
-    .board-panel { flex: 1.2; background-color: #E6FFFA; padding: 15px; min-height: 0; }
-    .board-wrap { flex: 1; display: flex; justify-content: center; align-items: center; overflow: hidden; }
-    .board { display: grid; width: 100%; height: 100%; max-width: 580px; max-height: 580px; aspect-ratio: 1 / 1; gap: var(--cell-gap); }
-    .cell { width: 100%; height: 100%; border: 1.5px solid #A0AEC0; border-radius: 4px; background: #fff; position: relative; transition: all 0.2s; }
-    .cell input { width: 100%; height: 100%; border: none; outline: none; text-align: center; background: transparent; font-size: clamp(12px, 2.5vmin, 20px); font-family: 'CookieRun'; font-weight: 700; color: #1A202C; padding: 0; }
-    .cell-number { position: absolute; top: 1px; left: 2px; font-size: 9px; font-weight: 700; color: var(--main-color-dark); pointer-events: none; }
-    .block { visibility: hidden; }
+    .layout { display: flex; gap: 12px; flex: 1; min-height: 0; }
     
-    .cell.active-cell { border: 2.5px solid var(--accent-color); z-index: 5; transform: scale(1.05); box-shadow: 0 0 10px rgba(255,192,69,0.5); }
+    /* 퍼즐판 영역 */
+    .panel { border-radius: 15px; box-shadow: var(--shadow); display: flex; flex-direction: column; overflow: hidden; background: #fff; }
+    .board-panel { flex: 1.5; background-color: #E6FFFA; padding: 8px; min-height: 0; display: flex; align-items: center; justify-content: center; }
+    .board-wrap { width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; }
+    .board { display: grid; width: 100%; max-width: 550px; aspect-ratio: 1 / 1; gap: var(--cell-gap); }
+    
+    .cell { width: 100%; height: 100%; border: 1px solid #CBD5E0; border-radius: 2px; background: #fff; position: relative; }
+    .cell input { width: 100%; height: 100%; border: none; outline: none; text-align: center; background: transparent; font-size: clamp(10px, 3vw, 18px); font-family: 'CookieRun'; font-weight: 700; color: #1A202C; padding: 0; appearance: none; border-radius: 0; }
+    .cell-number { position: absolute; top: 0px; left: 1px; font-size: clamp(7px, 1.5vw, 10px); font-weight: 700; color: var(--main-color-dark); pointer-events: none; z-index: 2; }
+    .block { background: #2D3748 !important; border: none; visibility: visible; opacity: 0.1; }
+    
+    .cell.active-cell { border: 2px solid var(--accent-color); z-index: 5; background: #FFFBEB; }
     .cell.highlight { background: #FFFFAF; }
     .cell.correct input { background: #D1FAE5; color: var(--main-color-dark); }
     .cell.wrong input { background: #FFF5F5; color: #E53E3E; }
     
-    .sidebar { width: 360px; flex-shrink: 0; }
-    .sidebar-header { background: var(--main-color); color: #fff; padding: 12px; font-weight: 700; text-align: center; font-size: 18px; }
-    .sidebar-body { padding: 15px; overflow-y: auto; flex: 1; }
-    .clue-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
-    .clue-title { font-size: 15px; color: var(--main-color-dark); border-bottom: 2px dashed #E2E8F0; padding-bottom: 5px; margin-bottom: 10px; }
+    /* 사이드바(힌트) 영역 */
+    .sidebar { width: 320px; flex-shrink: 0; border: 2px solid #fff; }
+    .sidebar-header { background: var(--main-color); color: #fff; padding: 10px; font-weight: 700; text-align: center; font-size: 16px; }
+    .sidebar-body { padding: 12px; overflow-y: auto; flex: 1; }
+    .clue-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px; }
+    .clue-title { font-size: 14px; font-weight: 700; color: var(--main-color-dark); border-bottom: 2px dashed #E2E8F0; padding-bottom: 4px; margin-bottom: 8px; }
     
-    /* 힌트 카드 디자인 업데이트 */
-    .clue-card { border: 1.5px solid #EDF2F7; border-radius: 10px; padding: 12px; cursor: pointer; transition: 0.2s; background: #fff; }
-    .clue-card.active-clue { border-color: var(--accent-color); background: #FFFFAF; box-shadow: 0 4px 8px rgba(255,192,69,0.2); }
-    .clue-header { display: flex; align-items: center; margin-bottom: 8px; flex-wrap: wrap; gap: 6px; }
-    .badge { padding: 3px 8px; border-radius: 6px; color: #fff; font-size: 11px; font-weight: 700; }
+    .clue-card { border: 1.2px solid #EDF2F7; border-radius: 8px; padding: 10px; cursor: pointer; background: #fff; transition: background 0.2s; }
+    .clue-card.active-clue { border-color: var(--accent-color); background: #FFFFAF; }
+    .clue-header { display: flex; align-items: center; margin-bottom: 4px; gap: 6px; }
+    .badge { padding: 2px 6px; border-radius: 4px; color: #fff; font-size: 10px; font-weight: 700; }
     .badge.across { background: var(--accent-color); }
     .badge.down { background: #63B3ED; }
-    .chosung-pill { background: #EDF2F7; color: #4A5568; padding: 3px 10px; border-radius: 12px; font-size: 12px; font-weight: 700; letter-spacing: 2px; }
-    .clue-card.active-clue .chosung-pill { background: #fff; color: var(--main-color-dark); border: 1px dashed var(--main-color); }
-    .clue-desc { font-size: 13.5px; line-height: 1.4; color: #2D3748; }
+    .chosung-pill { background: #EDF2F7; color: #4A5568; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 700; letter-spacing: 1px; }
+    .clue-desc { font-size: 13px; line-height: 1.4; color: #4A5568; word-break: keep-all; }
     
-    .action-btn { width: 100%; padding: 12px; border: none; border-radius: 10px; color: #fff; font-family: 'CookieRun'; font-weight: 700; cursor: pointer; font-size: 15px; margin-bottom: 8px; box-shadow: 0 4px 0 rgba(0,0,0,0.1); transition: all 0.1s; }
-    .action-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 rgba(0,0,0,0.1); }
-    #submitBtn { background: var(--main-color); }
-    #resetBtn { background: #A0AEC0; }
-    
-    @media (max-width: 900px) { .layout { flex-direction: column; } .sidebar { width: 100%; flex: 1; min-height: 0; } .board-panel { height: 45vh; flex: none; } }
+    .footer-btns { padding: 10px; background: #F7FAFC; border-top: 1px solid #E2E8F0; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .action-btn { padding: 10px; border: none; border-radius: 8px; color: #fff; font-family: 'CookieRun'; font-weight: 700; cursor: pointer; font-size: 14px; transition: opacity 0.2s; }
+    #submitBtn { background: var(--main-color); grid-column: span 2; }
+    #resetBtn { background: #A0AEC0; grid-column: span 2; }
+
+    /* 모바일 대응 미디어 쿼리 */
+    @media (max-width: 850px) {
+      .layout { flex-direction: column; overflow: hidden; }
+      .board-panel { flex: none; height: 42vh; }
+      .sidebar { width: 100%; flex: 1; min-height: 0; }
+      .sidebar-body { display: flex; flex-direction: row; gap: 15px; }
+      .sidebar-body > div { flex: 1; min-width: 0; }
+      .top-header h1 { font-size: 20px; }
+      .footer-btns { grid-template-columns: 1fr 1fr; }
+      #submitBtn, #resetBtn { grid-column: span 1; }
+    }
   </style>
 </head>
 <body>
@@ -70,15 +83,11 @@
       <div class="top-row">
         <div class="progress-shell">
           <div class="progress-track"><div id="progressFill" class="progress-fill"></div></div>
-          <div id="solvedCountText" style="font-size:13px; font-weight:700; color:var(--main-color-dark); white-space:nowrap;">0 / 16</div>
+          <div id="solvedCountText" style="font-size:12px; font-weight:700; color:var(--main-color-dark); white-space:nowrap;">0 / 16</div>
         </div>
         <div class="timer-pill">⏰ <span id="timer">00:00</span></div>
       </div>
     </header>
-
-    <div class="guide-box">
-      💡 <b>Tab 키</b>로 이동하거나 칸을 <b>클릭</b>해 입력하세요! <b>[초기화]</b>로 다시 풀 수 있어요.
-    </div>
 
     <main class="layout">
       <section class="panel board-panel">
@@ -86,17 +95,21 @@
       </section>
 
       <aside class="panel sidebar">
-        <div class="sidebar-header">💡 지혜의 열쇠</div>
+        <div class="sidebar-header">💡 힌트 리스트</div>
         <div class="sidebar-body">
-          <div class="clue-title">👉 가로 문제</div>
-          <div id="acrossList" class="clue-list"></div>
-          <div class="clue-title">👇 세로 문제</div>
-          <div id="downList" class="clue-list"></div>
+          <div>
+            <div class="clue-title">가로 문제</div>
+            <div id="acrossList" class="clue-list"></div>
+          </div>
+          <div>
+            <div class="clue-title">세로 문제</div>
+            <div id="downList" class="clue-list"></div>
+          </div>
         </div>
-        <div style="padding:15px; background:#F7FAFC; border-top:1px solid #E2E8F0;">
-          <button id="submitBtn" class="action-btn">다 풀었어요! 제출하기</button>
-          <button id="resetBtn" class="action-btn">처음부터 다시 풀기</button>
-          <div id="resultBox" style="display:none; text-align:center; margin-top:10px; padding:10px; background:#E6FFFA; border-radius:10px; border:2px dashed var(--main-color); font-size:14px;"></div>
+        <div id="resultBox" style="display:none; text-align:center; padding:8px; background:#E6FFFA; font-size:13px; color:var(--main-color-dark); border-top:1px solid #eee;"></div>
+        <div class="footer-btns">
+          <button id="submitBtn" class="action-btn">제출하기</button>
+          <button id="resetBtn" class="action-btn">다시풀기</button>
         </div>
       </aside>
     </main>
@@ -106,22 +119,22 @@
     const PUZZLE = {
       size: 15,
       words: [
-        { id: "a1", no: 1, dir: "across", row: 2, col: 1, answer: "장애인차별금지법", chosung: "ㅈㅇㅇㅊㅂㄱㅈㅂ", hint: "장애를 이유로 차별하는 것을 금지하는 법률." },
-        { id: "d2", no: 2, dir: "down", row: 0, col: 1, answer: "지체장애", chosung: "ㅈㅊㅈㅇ", hint: "신체의 기능에 장애가 있는 상태." },
-        { id: "a3", no: 3, dir: "across", row: 12, col: 6, answer: "유니버설디자인", chosung: "ㅇㄴㅂㅅㄷㅈㅇ", hint: "누구나 편리하게 이용하도록 설계하는 것." },
-        { id: "a4", no: 4, dir: "across", row: 5, col: 1, answer: "배리어프리", chosung: "ㅂㄹㅇㅍㄹ", hint: "장애인의 생활에 불편을 주는 장벽을 허무는 운동." },
-        { id: "d5", no: 5, dir: "down", row: 4, col: 2, answer: "물리치료", chosung: "ㅁㄹㅊㄹ", hint: "재활을 위해 신체 기능을 회복시키는 치료." },
-        { id: "d6", no: 6, dir: "down", row: 0, col: 11, answer: "의사소통", chosung: "ㅇㅅㅅㅌ", hint: "생각이나 감정을 주고받는 일. (수어, 점자 등)" },
-        { id: "a7", no: 7, dir: "across", row: 1, col: 10, answer: "경사로", chosung: "ㄱㅅㄹ", hint: "휠체어 등이 계단 대신 이용하는 비탈길." },
-        { id: "a8", no: 8, dir: "across", row: 10, col: 1, answer: "보조공학", chosung: "ㅂㅈㄱㅎ", hint: "장애인의 일상을 돕는 기기와 기술 분야." },
-        { id: "d9", no: 9, dir: "down", row: 10, col: 4, answer: "학습권", chosung: "ㅎㅅㄱ", hint: "누구나 교육을 받을 소중한 권리." },
-        { id: "d10", no: 10, dir: "down", row: 2, col: 3, answer: "인권", chosung: "ㅇㄱ", hint: "사람이라면 누구나 가지는 기본적인 권리." },
-        { id: "a11", no: 11, dir: "across", row: 0, col: 5, answer: "안내견", chosung: "ㅇㄴㄱ", hint: "시각장애인의 보행을 돕는 훈련된 개." },
-        { id: "d12", no: 12, dir: "down", row: 6, col: 8, answer: "지적장애", chosung: "ㅈㅈㅈㅇ", hint: "지적 능력이 지체되어 도움이 필요한 장애." },
-        { id: "a13", no: 13, dir: "across", row: 8, col: 6, answer: "발달장애", chosung: "ㅂㄷㅈㅇ", hint: "지적장애와 자폐성장애를 통칭하는 말." },
-        { id: "d14", no: 14, dir: "down", row: 11, col: 11, answer: "점자", chosung: "ㅈㅈ", hint: "시각장애인이 손끝으로 읽는 볼록한 문자." },
-        { id: "a15", no: 15, dir: "across", row: 14, col: 1, answer: "수어", chosung: "ㅅㅇ", hint: "손의 움직임과 표정으로 대화하는 언어." },
-        { id: "a16", no: 16, dir: "across", row: 3, col: 11, answer: "통합교육", chosung: "ㅌㅎㄱㅇ", hint: "장애학생과 비장애학생이 함께 참여하고 교육받는 것." }
+        { id: "a1", no: 1, dir: "across", row: 2, col: 1, answer: "장애인차별금지법", chosung: "ㅈㅇㅇㅊㅂㄱㅈㅂ", hint: "장애를 이유로 차별받지 않도록 국가가 정한 법률이에요." },
+        { id: "d2", no: 2, dir: "down", row: 0, col: 1, answer: "지체장애", chosung: "ㅈㅊㅈㅇ", hint: "팔, 다리나 몸통의 기능에 제한이 있는 상태를 말해요." },
+        { id: "a3", no: 3, dir: "across", row: 12, col: 6, answer: "유니버설디자인", chosung: "ㅇㄴㅂㅅㄷㅈㅇ", hint: "장애 유무와 상관없이 누구나 편리하게 쓰도록 만드는 설계예요." },
+        { id: "a4", no: 4, dir: "across", row: 5, col: 1, answer: "배리어프리", chosung: "ㅂㄹㅇㅍㄹ", hint: "장애인의 생활에 불편을 주는 물리적, 심리적 장벽을 없애는 운동이에요." },
+        { id: "d5", no: 5, dir: "down", row: 4, col: 2, answer: "물리치료", chosung: "ㅁㄹㅊㄹ", hint: "운동이나 기구 등을 이용해 신체 기능을 회복하도록 돕는 활동이에요." },
+        { id: "d6", no: 6, dir: "down", row: 0, col: 11, answer: "의사소통", chosung: "ㅇㅅㅅㅌ", hint: "말, 수어, 점자 등을 통해 서로의 생각과 마음을 주고받는 일이에요." },
+        { id: "a7", no: 7, dir: "across", row: 1, col: 10, answer: "경사로", chosung: "ㄱㅅㄹ", hint: "휠체어나 유모차가 계단 대신 편하게 오르내릴 수 있는 비탈길이에요." },
+        { id: "a8", no: 8, dir: "across", row: 10, col: 1, answer: "보조공학", chosung: "ㅂㅈㄱㅎ", hint: "장애인의 일상생활을 돕는 첨단 기기나 기술을 연구하는 분야예요." },
+        { id: "d9", no: 9, dir: "down", row: 10, col: 4, answer: "학습권", chosung: "ㅎㅅㄱ", hint: "누구나 차별 없이 원하는 교육을 받을 수 있는 소중한 권리예요." },
+        { id: "d10", no: 10, dir: "down", row: 2, col: 3, answer: "인권", chosung: "ㅇㄱ", hint: "사람이라면 누구나 태어날 때부터 가지는 기본적인 권리예요." },
+        { id: "a11", no: 11, dir: "across", row: 0, col: 5, answer: "안내견", chosung: "ㅇㄴㄱ", hint: "시각장애인이 안전하게 길을 갈 수 있도록 안내하는 훈련된 개예요." },
+        { id: "d12", no: 12, dir: "down", row: 6, col: 8, answer: "지적장애", chosung: "ㅈㅈㅈㅇ", hint: "지적 능력이 발달 단계에 비해 느려 도움이 필요한 상태를 말해요." },
+        { id: "a13", no: 13, dir: "across", row: 8, col: 6, answer: "발달장애", chosung: "ㅂㄷㅈㅇ", hint: "지적장애와 자폐성장애를 아울러 부르는 말이에요." },
+        { id: "d14", no: 14, dir: "down", row: 11, col: 11, answer: "점자", chosung: "ㅈㅈ", hint: "시각장애인이 손가락 끝으로 읽을 수 있게 만든 볼록한 글자예요." },
+        { id: "a15", no: 15, dir: "across", row: 14, col: 1, answer: "수어", chosung: "ㅅㅇ", hint: "손의 움직임과 표정 등을 사용하는 청각장애인의 공용어예요." },
+        { id: "a16", no: 16, dir: "across", row: 3, col: 11, answer: "통합교육", chosung: "ㅌㅎㄱㅇ", hint: "장애학생과 비장애학생이 한 교실에서 함께 배우며 성장하는 교육이에요." }
       ]
     };
 
@@ -164,8 +177,14 @@
             const input = document.createElement("input");
             input.maxLength = 1;
             input.dataset.r = r; input.dataset.c = c;
-            input.onfocus = () => highlightWord(data.wordIds[0]);
-            input.oninput = () => updateProgress();
+            // 모바일 포커스 시 키보드 가림 방지
+            input.onfocus = () => {
+              highlightWord(data.wordIds[0]);
+            };
+            input.oninput = (e) => {
+              e.target.value = e.target.value.replace(/[^ㄱ-ㅎ가-힣]/g, '');
+              updateProgress();
+            };
             cell.appendChild(input);
           }
           board.appendChild(cell);
@@ -180,8 +199,6 @@
         const card = document.createElement("div");
         card.className = "clue-card";
         card.id = `clue-${w.id}`;
-        
-        // 힌트 내용과 초성 배지 분리 구성
         card.innerHTML = `
           <div class="clue-header">
             <span class="badge ${w.dir}">${w.no}</span>
@@ -189,7 +206,6 @@
           </div>
           <div class="clue-desc">${w.hint}</div>
         `;
-        
         card.onclick = () => {
           highlightWord(w.id);
           const targetInput = document.querySelector(`input[data-r="${w.row}"][data-c="${w.col}"]`);
@@ -204,18 +220,17 @@
       if(!word) return;
       document.querySelectorAll('.cell').forEach(el => el.classList.remove('active-cell', 'highlight'));
       document.querySelectorAll('.clue-card').forEach(el => el.classList.remove('active-clue'));
+      
       const activeClue = document.getElementById(`clue-${wordId}`);
-      if(activeClue) {
-          activeClue.classList.add('active-clue');
-          activeClue.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      }
+      if(activeClue) activeClue.classList.add('active-clue');
+
       word.answer.split('').forEach((_, i) => {
         const r = word.row + (word.dir === "down" ? i : 0);
         const c = word.col + (word.dir === "across" ? i : 0);
         const cellEl = document.getElementById(`cell-${r}-${c}`);
         if(cellEl) {
-            cellEl.classList.add('highlight');
-            if(i === 0) cellEl.classList.add('active-cell');
+          cellEl.classList.add('highlight');
+          if(i === 0) cellEl.classList.add('active-cell');
         }
       });
     }
@@ -247,7 +262,6 @@
     }
 
     document.getElementById("submitBtn").onclick = () => {
-      clearInterval(state.timerId);
       let correct = 0;
       PUZZLE.words.forEach(w => {
         const userAns = w.answer.split('').map((_, i) => {
@@ -265,22 +279,14 @@
           cell.classList.add(isCorrect ? "correct" : "wrong");
         });
       });
-      const totalWords = PUZZLE.words.length;
       const res = document.getElementById("resultBox");
       res.style.display = "block";
-      res.innerHTML = `<strong>결과: ${correct} / ${totalWords} 정답!</strong><br>소요시간: ${document.getElementById("timer").textContent}`;
+      res.innerHTML = `🏁 결과: ${correct} / ${PUZZLE.words.length} 정답! (시간: ${document.getElementById("timer").textContent})`;
     };
 
     document.getElementById("resetBtn").onclick = () => {
-      if(!confirm("정말 처음부터 다시 풀까요?")) return;
-      document.querySelectorAll('.cell input').forEach(input => input.value = "");
-      document.querySelectorAll('.cell').forEach(cell => cell.classList.remove('correct', 'wrong', 'active-cell', 'highlight'));
-      document.querySelectorAll('.clue-card').forEach(card => card.classList.remove('active-clue'));
-      state.elapsedSec = 0;
-      document.getElementById("timer").textContent = "00:00";
-      document.getElementById("resultBox").style.display = "none";
-      updateProgress();
-      startTimer();
+      if(!confirm("처음부터 다시 풀까요?")) return;
+      location.reload();
     };
 
     init();
